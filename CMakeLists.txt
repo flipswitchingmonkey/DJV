@@ -19,6 +19,12 @@ project(
     LANGUAGES CXX)
 
 #-------------------------------------------------------------------------------
+# Build options
+
+set(DJV_PACKAGE OFF CACHE BOOL "Create packages")
+set(DJV_MACOS_TEAM_ID "" CACHE STRING "The development team ID for macOS code signing")
+
+#-------------------------------------------------------------------------------
 # Internal configuration
 
 list(PREPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
@@ -43,8 +49,7 @@ endif()
 
 if(WIN32)
 elseif(APPLE)
-    set(CMAKE_INSTALL_RPATH "@executable_path/../lib")
-    # \bug Should this be set automatically?
+    set(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks")
     if(CMAKE_BUILD_TYPE MATCHES "^Debug$")
         set(CMAKE_BUILD_RPATH "@executable_path/../../../install-Debug/lib")
     elseif (CMAKE_BUILD_TYPE MATCHES "^RelWithDebInfo$")
@@ -80,8 +85,8 @@ endif()
 #-------------------------------------------------------------------------------
 # Packaging
 
-if(CMAKE_BUILD_TYPE MATCHES "^Release$")
-    include(djvPackage)
+if(DJV_PACKAGE)
+    include(Package)
     include(CPack)
     include(InstallRequiredSystemLibraries)
 endif()

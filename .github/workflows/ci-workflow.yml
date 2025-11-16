@@ -85,6 +85,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     env:
+      DJV_PACKAGE: ON
       TLRENDER_NET: OFF
       TLRENDER_OCIO: ON
       TLRENDER_JPEG: ON
@@ -174,6 +175,7 @@ jobs:
     runs-on: macos-latest
 
     env:
+      DJV_PACKAGE: ON
       TLRENDER_NET: OFF
       TLRENDER_OCIO: ON
       TLRENDER_JPEG: ON
@@ -269,6 +271,7 @@ jobs:
     runs-on: windows-latest
 
     env:
+      DJV_PACKAGE: ON
       TLRENDER_NET: OFF
       TLRENDER_OCIO: ON
       TLRENDER_JPEG: ON

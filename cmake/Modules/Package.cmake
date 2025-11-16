@@ -8,6 +8,7 @@ set(CPACK_PACKAGE_DESCRIPTION "DJV is an open source application for playback an
 set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
 set(CPACK_PACKAGE_EXECUTABLES djv DJV)
 set(CPACK_PACKAGE_VENDOR "Grizzly Peak 3D")
+set(CPACK_VERBATIM_VARIABLES YES)
 
 if(WIN32)
     set(CPACK_GENERATOR ZIP NSIS)
@@ -285,17 +286,19 @@ elseif(APPLE)
             ${CMAKE_INSTALL_PREFIX}/lib/libusd_work.dylib)
         list(APPEND INSTALL_DYLIBS ${MATERIALX_DYLIBS} ${TBB_DYLIBS} ${OSD_DYLIBS} ${USD_DYLIBS})
 
+        # \bug Why do we need to use ".." to avoid installing into the
+        # "Resources" directory in the bundle?
         install(
             DIRECTORY ${CMAKE_INSTALL_PREFIX}/lib/usd
-            DESTINATION lib)
+            DESTINATION ../Frameworks)
         install(
-            DIRECTORY ${CMAKE_INSTALL_PREFIX}/plugin
-            DESTINATION ".")
+            DIRECTORY ${CMAKE_INSTALL_PREFIX}/plugin/usd
+            DESTINATION ../PlugIns)
     endif()
-    
-    install(
-        FILES ${INSTALL_DYLIBS}
-        DESTINATION lib)
+
+    # \bug Why do we need to use ".." to avoid installing into the
+    # "Resources" directory in the bundle?
+    install(FILES ${INSTALL_DYLIBS} DESTINATION ../Frameworks)
 
     set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
     configure_file(
@@ -303,6 +306,11 @@ elseif(APPLE)
         ${PROJECT_BINARY_DIR}/Info.plist)
     set(CPACK_BUNDLE_PLIST ${PROJECT_BINARY_DIR}/Info.plist)
     set(CPACK_BUNDLE_ICON ${PROJECT_SOURCE_DIR}/etc/macOS/DJV.icns)
+
+    set(CPACK_PRE_BUILD_SCRIPTS
+        "${PROJECT_SOURCE_DIR}/cmake/Modules/macOSAppSign.cmake")
+    set(CPACK_POST_BUILD_SCRIPTS
+        "${PROJECT_SOURCE_DIR}/cmake/Modules/macOSPackageSign.cmake")
 
 else()
 

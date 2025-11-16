@@ -1,0 +1,21 @@
+#!/bin/sh
+
+set -x
+
+export FTK_API=GL_4_1
+
+export DJV_PACKAGE=ON
+export TLRENDER_NET=OFF
+export TLRENDER_OCIO=ON
+export TLRENDER_JPEG=ON
+export TLRENDER_TIFF=ON
+export TLRENDER_EXR=ON
+export TLRENDER_FFMPEG=ON
+export TLRENDER_FFMPEG_MINIMAL=ON
+export TLRENDER_OIIO=ON
+export TLRENDER_USD=ON
+export TLRENDER_BMD=OFF
+export TLRENDER_BMD_SDK=
+
+sh DJV/etc/Linux/linux-build-gha.sh Release
+cmake --build build-Release --target package

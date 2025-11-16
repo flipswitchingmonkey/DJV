@@ -28,6 +28,7 @@ cmake ^
     -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ^
     -DCMAKE_INSTALL_PREFIX=%CD%/install-%BUILD_TYPE% ^
     -DCMAKE_PREFIX_PATH=%CD%/install-%BUILD_TYPE% ^
+    -DDJV_PACKAGE=%DJV_PACKAGE% ^
     -DTLRENDER_NET=%TLRENDER_NET% ^
     -DTLRENDER_OCIO=%TLRENDER_OCIO% ^
     -DTLRENDER_EXR=%TLRENDER_EXR% ^
@@ -37,4 +38,3 @@ cmake ^
     -DTLRENDER_BMD=%TLRENDER_BMD% ^
     -Dftk_API=%FTK_API%
 cmake --build build-%BUILD_TYPE% -j %JOBS% --config %BUILD_TYPE%
-cmake --build build-%BUILD_TYPE% --config %BUILD_TYPE% --target install
