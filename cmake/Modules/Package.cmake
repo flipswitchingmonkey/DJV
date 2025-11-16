@@ -308,6 +308,7 @@ elseif(APPLE)
     set(CPACK_BUNDLE_ICON ${PROJECT_SOURCE_DIR}/etc/macOS/DJV.icns)
 
     set(CPACK_PRE_BUILD_SCRIPTS
+        "${PROJECT_SOURCE_DIR}/cmake/Modules/usdPluginsSymlink.cmake"
         "${PROJECT_SOURCE_DIR}/cmake/Modules/macOSAppSign.cmake")
     set(CPACK_POST_BUILD_SCRIPTS
         "${PROJECT_SOURCE_DIR}/cmake/Modules/macOSPackageSign.cmake")
