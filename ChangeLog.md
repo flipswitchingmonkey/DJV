@@ -1,8 +1,9 @@
 ## 3.2.0
 
 Features:
-* Use SDL2 for window creation and input handling.
-* Add support for OpenImageIO.
+* SDL2 support for window creation and input handling.
+* Support for OpenImageIO.
+* Signed macOS packages.
 * Library updates:
     - tlRender 0.11.0
     - feather-tk 0.5.0
@@ -28,6 +29,7 @@ Fixes:
 * Fix opening file associations on macOS.
 * Fixes for keyboard mapping and number pad.
 * Fixes for building with CMake 4.x versions.
+* Fix for cached frames wrapping around the timeline.
 
 
 ## 3.1.1
