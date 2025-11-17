@@ -5,7 +5,7 @@ Features:
 * Support for OpenImageIO.
 * Signed macOS packages.
 * Library updates:
-    - tlRender 0.11.0
+    - tlRender 0.13.0
     - feather-tk 0.5.0
     - OpenTimelineIO v0.18.0
     - OpenColorIO v2.5.0
