@@ -62,10 +62,6 @@ DJV folder to a convenient location.
 Packages are distributed as macOS disk images. Open the disk image and copy
 DJV to the Applications folder.
 
-The first time DJV is started there will be an error about security; to fix
-this open the security settings and click the **Open Anyway** button:
-![macOS Security](assets/macOSSecurityAnnotated.svg)
-
 
 <br><br><a name="main_window"></a>
 ## Main Window
