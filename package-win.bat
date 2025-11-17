@@ -14,4 +14,4 @@ set TLRENDER_BMD=OFF
 set TLRENDER_BMD_SDK=
 
 DJV\etc\Windows\windows-build-gha.bat Release
-cmake --build build-Release --target package
+cmake --build build-Release --config Release --target package

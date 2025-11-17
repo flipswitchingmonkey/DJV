@@ -21,4 +21,4 @@ export CMAKE_OSX_DEPLOYMENT_TARGET=10.15
 export CMAKE_OSX_ARCHITECTURES=arm64
 
 sh DJV/etc/macOS/macos-build-gha.sh Release
-cmake --build build-Release --target package
+cmake --build build-Release --config Release --target package

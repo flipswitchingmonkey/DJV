@@ -18,4 +18,4 @@ export TLRENDER_BMD=OFF
 export TLRENDER_BMD_SDK=
 
 sh DJV/etc/Linux/linux-build-gha.sh Release
-cmake --build build-Release --target package
+cmake --build build-Release --config Release --target package
