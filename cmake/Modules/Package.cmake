@@ -3,10 +3,10 @@ if(Darwin STREQUAL SYSTEM_NAME)
     set(SYSTEM_NAME macOS)
 endif()
 set(CPACK_PACKAGE_FILE_NAME
-    ${CMAKE_PROJECT_NAME}-${CMAKE_PROJECT_VERSION}-${SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR})
+    djv-${CMAKE_PROJECT_VERSION}-${SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR})
 set(CPACK_PACKAGE_DESCRIPTION "DJV is an open source application for playback and review of image sequences.")
 set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
-set(CPACK_PACKAGE_EXECUTABLES djv DJV)
+set(CPACK_PACKAGE_EXECUTABLES djv)
 set(CPACK_PACKAGE_VENDOR "Grizzly Peak 3D")
 set(CPACK_VERBATIM_VARIABLES YES)
 
@@ -300,12 +300,14 @@ elseif(APPLE)
     # "Resources" directory in the bundle?
     install(FILES ${INSTALL_DYLIBS} DESTINATION ../Frameworks)
 
-    set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
+    set(CPACK_BUNDLE_NAME djv)
     configure_file(
         ${PROJECT_SOURCE_DIR}/etc/macOS/Info.plist.in
         ${PROJECT_BINARY_DIR}/Info.plist)
     set(CPACK_BUNDLE_PLIST ${PROJECT_BINARY_DIR}/Info.plist)
-    set(CPACK_BUNDLE_ICON ${PROJECT_SOURCE_DIR}/etc/macOS/DJV.icns)
+    set(CPACK_BUNDLE_ICON ${PROJECT_SOURCE_DIR}/etc/macOS/djv.icns)
+    install(FILES ${PROJECT_BINARY_DIR}/Info.plist DESTINATION "..")
+    install(FILES ${PROJECT_SOURCE_DIR}/etc/macOS/djv.icns DESTINATION ".")
 
     set(CPACK_PRE_BUILD_SCRIPTS
         "${PROJECT_SOURCE_DIR}/cmake/Modules/usdPluginsSymlink.cmake"

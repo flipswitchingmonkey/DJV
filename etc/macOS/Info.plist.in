@@ -5,9 +5,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.grizzlypeak3d.djv</string>
 	<key>CFBundleName</key>
-	<string>DJV</string>
+	<string>djv</string>
 	<key>CFBundleIconFile</key>
-	<string>DJV.icns</string>
+	<string>djv.icns</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
