@@ -5,4 +5,4 @@ cp ../Icons/DJV_Icon_64.png DJV.iconset/icon_64x64.png
 cp ../Icons/DJV_Icon_32.png DJV.iconset/icon_32x32.png
 cp ../Icons/DJV_Icon_16.png DJV.iconset/icon_16x16.png
 
-iconutil -c icns djv.iconset
+iconutil -c icns DJV.iconset

@@ -306,9 +306,9 @@ elseif(APPLE)
         ${PROJECT_SOURCE_DIR}/etc/macOS/Info.plist.in
         ${PROJECT_BINARY_DIR}/Info.plist)
     set(CPACK_BUNDLE_PLIST ${PROJECT_BINARY_DIR}/Info.plist)
-    set(CPACK_BUNDLE_ICON ${PROJECT_SOURCE_DIR}/etc/macOS/djv.icns)
+    set(CPACK_BUNDLE_ICON ${PROJECT_SOURCE_DIR}/etc/macOS/DJV.icns)
     install(FILES ${PROJECT_BINARY_DIR}/Info.plist DESTINATION "..")
-    install(FILES ${PROJECT_SOURCE_DIR}/etc/macOS/djv.icns DESTINATION ".")
+    install(FILES ${PROJECT_SOURCE_DIR}/etc/macOS/DJV.icns DESTINATION ".")
 
     set(CPACK_PRE_BUILD_SCRIPTS
         "${PROJECT_SOURCE_DIR}/cmake/Modules/usdPluginsSymlink.cmake"
