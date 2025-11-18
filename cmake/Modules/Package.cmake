@@ -1,9 +1,10 @@
 set(SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
 if(Darwin STREQUAL SYSTEM_NAME)
-    set(SYSTEM_NAME macOS)
+    set(SYSTEM_NAME macos)
 endif()
-set(CPACK_PACKAGE_FILE_NAME
-    djv-${CMAKE_PROJECT_VERSION}-${SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR})
+string(TOLOWER
+    djv-${CMAKE_PROJECT_VERSION}-${SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}
+    CPACK_PACKAGE_FILE_NAME)
 set(CPACK_PACKAGE_DESCRIPTION "DJV is an open source application for playback and review of image sequences.")
 set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
 set(CPACK_PACKAGE_EXECUTABLES djv "DJV ${CMAKE_PROJECT_VERSION}")
@@ -300,7 +301,7 @@ elseif(APPLE)
     # "Resources" directory in the bundle?
     install(FILES ${INSTALL_DYLIBS} DESTINATION ../Frameworks)
 
-    set(CPACK_BUNDLE_NAME djv)
+    set(CPACK_BUNDLE_NAME DJV)
     configure_file(
         ${PROJECT_SOURCE_DIR}/etc/macOS/Info.plist.in
         ${PROJECT_BINARY_DIR}/Info.plist)
