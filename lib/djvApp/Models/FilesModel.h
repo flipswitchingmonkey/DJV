@@ -5,10 +5,9 @@
 
 #include <tlTimeline/CompareOptions.h>
 
-#include <tlCore/Path.h>
-
 #include <ftk/Core/ObservableList.h>
 #include <ftk/Core/ObservableValue.h>
+#include <ftk/Core/Path.h>
 
 namespace ftk
 {
@@ -22,8 +21,8 @@ namespace djv
         //! Files model item.
         struct FilesModelItem
         {
-            tl::file::Path path;
-            tl::file::Path audioPath;
+            ftk::Path path;
+            ftk::Path audioPath;
 
             std::vector<std::string> videoLayers;
             size_t videoLayer = 0;

@@ -51,21 +51,21 @@ namespace djv
         FTK_ENUM_IMPL(
             ExportFileType,
             "Image",
-            "Sequence",
+            "Seq",
             "Movie");
 
         bool ExportSettings::operator == (const ExportSettings& other) const
         {
             return
-                directory == other.directory &&
+                dir == other.dir &&
                 renderSize == other.renderSize &&
                 customSize == other.customSize &&
                 fileType == other.fileType &&
-                imageBaseName == other.imageBaseName &&
+                imageBase == other.imageBase &&
                 imageZeroPad == other.imageZeroPad &&
-                imageExtension == other.imageExtension &&
-                movieBaseName == other.movieBaseName &&
-                movieExtension == other.movieExtension &&
+                imageExt == other.imageExt &&
+                movieBase == other.movieBase &&
+                movieExt == other.movieExt &&
                 movieCodec == other.movieCodec;
         }
 
@@ -80,7 +80,7 @@ namespace djv
                 nativeFileDialog == other.nativeFileDialog &&
                 path == other.path &&
                 options == other.options &&
-                extension == other.extension;
+                ext == other.ext;
         }
 
         bool FileBrowserSettings::operator != (const FileBrowserSettings& other) const
@@ -88,17 +88,17 @@ namespace djv
             return !(*this == other);
         }
 
-        bool ImageSequenceSettings::operator == (const ImageSequenceSettings& other) const
+        bool ImageSeqSettings::operator == (const ImageSeqSettings& other) const
         {
             return
                 audio == other.audio &&
-                audioExtensions == other.audioExtensions &&
+                audioExts == other.audioExts &&
                 audioFileName == other.audioFileName &&
                 maxDigits == other.maxDigits &&
                 io == other.io;
         }
 
-        bool ImageSequenceSettings::operator != (const ImageSequenceSettings& other) const
+        bool ImageSeqSettings::operator != (const ImageSeqSettings& other) const
         {
             return !(*this == other);
         }
@@ -387,7 +387,7 @@ namespace djv
             std::shared_ptr<ftk::ObservableValue<tl::timeline::PlayerCacheOptions> > cache;
             std::shared_ptr<ftk::ObservableValue<ExportSettings> > exportSettings;
             std::shared_ptr<ftk::ObservableValue<FileBrowserSettings> > fileBrowser;
-            std::shared_ptr<ftk::ObservableValue<ImageSequenceSettings> > imageSequence;
+            std::shared_ptr<ftk::ObservableValue<ImageSeqSettings> > imageSeq;
             std::shared_ptr<ftk::ObservableValue<ShortcutsSettings> > Shortcuts;
             std::shared_ptr<ftk::ObservableValue<MiscSettings> > misc;
             std::shared_ptr<ftk::ObservableValue<MouseSettings> > mouse;
@@ -432,11 +432,11 @@ namespace djv
             fileBrowserSystem->setNativeFileDialog(fileBrowser.nativeFileDialog);
             fileBrowserSystem->getModel()->setPath(fileBrowser.path);
             fileBrowserSystem->getModel()->setOptions(fileBrowser.options);
-            fileBrowserSystem->getModel()->setExtension(fileBrowser.extension);
+            fileBrowserSystem->getModel()->setExt(fileBrowser.ext);
 
-            ImageSequenceSettings imageSequence;
-            settings->getT("/ImageSequence", imageSequence);
-            p.imageSequence = ftk::ObservableValue<ImageSequenceSettings>::create(imageSequence);
+            ImageSeqSettings imageSeq;
+            settings->getT("/ImageSeq", imageSeq);
+            p.imageSeq = ftk::ObservableValue<ImageSeqSettings>::create(imageSeq);
 
             ShortcutsSettings Shortcuts;
             settings->getT("/Shortcuts", Shortcuts);
@@ -509,11 +509,11 @@ namespace djv
                 auto fileBrowserSystem = context->getSystem<ftk::FileBrowserSystem>();
                 fileBrowser.path = fileBrowserSystem->getModel()->getPath().u8string();
                 fileBrowser.options = fileBrowserSystem->getModel()->getOptions();
-                fileBrowser.extension = fileBrowserSystem->getModel()->getExtension();
+                fileBrowser.ext = fileBrowserSystem->getModel()->getExt();
             }
             p.settings->setT("/FileBrowser", fileBrowser);
 
-            p.settings->setT("/ImageSequence", p.imageSequence->get());
+            p.settings->setT("/ImageSeq", p.imageSeq->get());
             p.settings->setT("/Shortcuts", p.Shortcuts->get());
             p.settings->setT("/Misc", p.misc->get());
             p.settings->setT("/Mouse", p.mouse->get());
@@ -538,7 +538,7 @@ namespace djv
             setCache(tl::timeline::PlayerCacheOptions());
             setExport(ExportSettings());
             setFileBrowser(FileBrowserSettings());
-            setImageSequence(ImageSequenceSettings());
+            setImageSeq(ImageSeqSettings());
             setShortcuts(ShortcutsSettings());
             MiscSettings miscSettings;
             miscSettings.showSetup = false;
@@ -625,19 +625,19 @@ namespace djv
             }
         }
 
-        const ImageSequenceSettings& SettingsModel::getImageSequence() const
+        const ImageSeqSettings& SettingsModel::getImageSeq() const
         {
-            return _p->imageSequence->get();
+            return _p->imageSeq->get();
         }
 
-        std::shared_ptr<ftk::IObservableValue<ImageSequenceSettings> > SettingsModel::observeImageSequence() const
+        std::shared_ptr<ftk::IObservableValue<ImageSeqSettings> > SettingsModel::observeImageSeq() const
         {
-            return _p->imageSequence;
+            return _p->imageSeq;
         }
 
-        void SettingsModel::setImageSequence(const ImageSequenceSettings& value)
+        void SettingsModel::setImageSeq(const ImageSeqSettings& value)
         {
-            _p->imageSequence->setIfChanged(value);
+            _p->imageSeq->setIfChanged(value);
         }
 
         const ShortcutsSettings& SettingsModel::getShortcuts() const
@@ -774,15 +774,15 @@ namespace djv
 
         void to_json(nlohmann::json& json, const ExportSettings& value)
         {
-            json["Directory"] = value.directory;
+            json["Dir"] = value.dir;
             json["RenderSize"] = to_string(value.renderSize);
             json["CustomSize"] = value.customSize;
             json["FileType"] = to_string(value.fileType);
-            json["ImageBaseName"] = value.imageBaseName;
+            json["ImageBase"] = value.imageBase;
             json["ImageZeroPad"] = value.imageZeroPad;
-            json["ImageExtension"] = value.imageExtension;
-            json["MovieBaseName"] = value.movieBaseName;
-            json["MovieExtension"] = value.movieExtension;
+            json["ImageExt"] = value.imageExt;
+            json["MovieBase"] = value.movieBase;
+            json["MovieExt"] = value.movieExt;
             json["MovieCodec"] = value.movieCodec;
         }
 
@@ -791,13 +791,13 @@ namespace djv
             json["NativeFileDialog"] = value.nativeFileDialog;
             json["Path"] = value.path;
             json["Options"] = value.options;
-            json["Extension"] = value.extension;
+            json["Ext"] = value.ext;
         }
 
-        void to_json(nlohmann::json& json, const ImageSequenceSettings& value)
+        void to_json(nlohmann::json& json, const ImageSeqSettings& value)
         {
             json["Audio"] = tl::timeline::to_string(value.audio);
-            json["AudioExtensions"] = value.audioExtensions;
+            json["AudioExts"] = value.audioExts;
             json["AudioFileName"] = value.audioFileName;
             json["MaxDigits"] = value.maxDigits;
             json["IO"] = value.io;
@@ -882,15 +882,15 @@ namespace djv
 
         void from_json(const nlohmann::json& json, ExportSettings& value)
         {
-            json.at("Directory").get_to(value.directory);
+            json.at("Dir").get_to(value.dir);
             from_string(json.at("RenderSize").get<std::string>(), value.renderSize);
             json.at("CustomSize").get_to(value.customSize);
             from_string(json.at("FileType").get<std::string>(), value.fileType);
-            json.at("ImageBaseName").get_to(value.imageBaseName);
+            json.at("ImageBase").get_to(value.imageBase);
             json.at("ImageZeroPad").get_to(value.imageZeroPad);
-            json.at("ImageExtension").get_to(value.imageExtension);
-            json.at("MovieBaseName").get_to(value.movieBaseName);
-            json.at("MovieExtension").get_to(value.movieExtension);
+            json.at("ImageExt").get_to(value.imageExt);
+            json.at("MovieBase").get_to(value.movieBase);
+            json.at("MovieExt").get_to(value.movieExt);
             json.at("MovieCodec").get_to(value.movieCodec);
         }
 
@@ -899,13 +899,13 @@ namespace djv
             json.at("NativeFileDialog").get_to(value.nativeFileDialog);
             json.at("Path").get_to(value.path);
             json.at("Options").get_to(value.options);
-            json.at("Extension").get_to(value.extension);
+            json.at("Ext").get_to(value.ext);
         }
 
-        void from_json(const nlohmann::json& json, ImageSequenceSettings& value)
+        void from_json(const nlohmann::json& json, ImageSeqSettings& value)
         {
             tl::timeline::from_string(json.at("Audio").get<std::string>(), value.audio);
-            json.at("AudioExtensions").get_to(value.audioExtensions);
+            json.at("AudioExts").get_to(value.audioExts);
             json.at("AudioFileName").get_to(value.audioFileName);
             json.at("MaxDigits").get_to(value.maxDigits);
             json.at("IO").get_to(value.io);

@@ -42,7 +42,6 @@
 #include <ftk/UI/FileBrowser.h>
 #include <ftk/UI/Settings.h>
 #include <ftk/Core/CmdLine.h>
-#include <ftk/Core/File.h>
 #include <ftk/Core/Format.h>
 
 #include <filesystem>
@@ -353,9 +352,9 @@ namespace djv
             auto fileBrowserSystem = _context->getSystem<ftk::FileBrowserSystem>();
             fileBrowserSystem->open(
                 p.mainWindow,
-                [this](const std::filesystem::path& value)
+                [this](const ftk::Path& value)
                 {
-                    open(tl::file::Path(value.u8string()));
+                    open(value);
                 });
         }
 
@@ -365,7 +364,7 @@ namespace djv
             p.separateAudioDialog = SeparateAudioDialog::create(_context);
             p.separateAudioDialog->open(p.mainWindow);
             p.separateAudioDialog->setCallback(
-                [this](const tl::file::Path& value, const tl::file::Path& audio)
+                [this](const ftk::Path& value, const ftk::Path& audio)
                 {
                     open(value, audio);
                     _p->separateAudioDialog->close();
@@ -377,11 +376,11 @@ namespace djv
                 });
         }
 
-        void App::open(const tl::file::Path& path, const tl::file::Path& audioPath)
+        void App::open(const ftk::Path& path, const ftk::Path& audioPath)
         {
             FTK_P();
-            tl::file::PathOptions pathOptions;
-            pathOptions.maxNumberDigits = p.settingsModel->getImageSequence().maxDigits;
+            ftk::PathOptions pathOptions;
+            pathOptions.seqMaxDigits = p.settingsModel->getImageSeq().maxDigits;
             for (const auto& i : tl::timeline::getPaths(_context, path, pathOptions))
             {
                 auto item = std::make_shared<FilesModelItem>();
@@ -630,7 +629,7 @@ namespace djv
 
             p.recentFilesModel = RecentFilesModel::create(_context, p.settings);
             auto fileBrowserSystem = _context->getSystem<ftk::FileBrowserSystem>();
-            fileBrowserSystem->getModel()->setExtensions(tl::timeline::getExtensions(_context));
+            fileBrowserSystem->getModel()->setExts(tl::timeline::getExts(_context));
             fileBrowserSystem->setRecentFilesModel(p.recentFilesModel);
 
             p.colorModel = ColorModel::create(_context, p.settings);
@@ -893,7 +892,7 @@ namespace djv
             {
                 if (p.cmdLine.compareFileName->hasValue())
                 {
-                    open(tl::file::Path(p.cmdLine.compareFileName->getValue()));
+                    open(ftk::Path(p.cmdLine.compareFileName->getValue()));
                     tl::timeline::CompareOptions options;
                     if (p.cmdLine.compare->hasValue())
                     {
@@ -919,8 +918,8 @@ namespace djv
                 for (const auto& input : p.cmdLine.inputs->getList())
                 {
                     open(
-                        tl::file::Path(input),
-                        tl::file::Path(audioFileName));
+                        ftk::Path(input),
+                        ftk::Path(audioFileName));
 
                     if (auto player = p.player->get())
                     {
@@ -1031,7 +1030,7 @@ namespace djv
         {
             FTK_P();
             tl::io::Options out;
-            out = tl::io::merge(out, tl::io::getOptions(p.settingsModel->getImageSequence().io));
+            out = tl::io::merge(out, tl::io::getOptions(p.settingsModel->getImageSeq().io));
 #if defined(TLRENDER_FFMPEG)
             out = tl::io::merge(out, tl::ffmpeg::getOptions(p.settingsModel->getFFmpeg()));
 #endif // TLRENDER_FFMPEG
@@ -1062,16 +1061,16 @@ namespace djv
                     try
                     {
                         tl::timeline::Options options;
-                        const ImageSequenceSettings imageSequence = p.settingsModel->getImageSequence();
-                        options.imageSequenceAudio = imageSequence.audio;
-                        options.imageSequenceAudioExtensions = imageSequence.audioExtensions;
-                        options.imageSequenceAudioFileName = imageSequence.audioFileName;
+                        const ImageSeqSettings imageSeq = p.settingsModel->getImageSeq();
+                        options.imageSeqAudio = imageSeq.audio;
+                        options.imageSeqAudioExts = imageSeq.audioExts;
+                        options.imageSeqAudioFileName = imageSeq.audioFileName;
                         const AdvancedSettings advanced = p.settingsModel->getAdvanced();
                         options.compat = advanced.compat;
                         options.videoRequestMax = advanced.videoRequestMax;
                         options.audioRequestMax = advanced.audioRequestMax;
                         options.ioOptions = _getIOOptions();
-                        options.pathOptions.maxNumberDigits = imageSequence.maxDigits;
+                        options.pathOptions.seqMaxDigits = imageSeq.maxDigits;
                         auto otioTimeline = files[i]->audioPath.isEmpty() ?
                             tl::timeline::create(_context, files[i]->path, options) :
                             tl::timeline::create(_context, files[i]->path, files[i]->audioPath, options);

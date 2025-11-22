@@ -29,7 +29,7 @@ namespace djv
         {
             std::weak_ptr<App> app;
             bool hud = false;
-            tl::file::Path path;
+            ftk::Path path;
             OTIO_NS::RationalTime currentTime = tl::time::invalidTime;
             double fps = 0.0;
             size_t droppedFrames = 0;
@@ -302,7 +302,7 @@ namespace djv
             }
             else
             {
-                p.path = tl::file::Path();
+                p.path = ftk::Path();
                 p.currentTime = tl::time::invalidTime;
                 p.currentTimeObserver.reset();
                 p.videoDataObserver.reset();
@@ -414,7 +414,7 @@ namespace djv
         {
             FTK_P();
 
-            p.fileNameLabel->setText(ftk::elide(p.path.get(-1, tl::file::PathType::FileName)));
+            p.fileNameLabel->setText(ftk::elide(p.path.getFileName()));
 
             std::string s;
             if (auto app = p.app.lock())

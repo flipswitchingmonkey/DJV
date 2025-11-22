@@ -66,8 +66,8 @@ namespace djv
 
             //! Open a file.
             void open(
-                const tl::file::Path& path,
-                const tl::file::Path& audioPath = tl::file::Path());
+                const ftk::Path& path,
+                const ftk::Path& audioPath = ftk::Path());
 
             //! Open a file dialog.
             void openDialog();

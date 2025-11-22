@@ -105,7 +105,7 @@ namespace djv
                 for (size_t i = 0; i < value.size(); ++i)
                 {
                     auto action = ftk::Action::create(
-                        value[i]->path.get(-1, tl::file::PathType::FileName),
+                        value[i]->path.getFileName(),
                         [this, i]
                         {
                             close();

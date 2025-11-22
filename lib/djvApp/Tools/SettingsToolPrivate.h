@@ -108,9 +108,9 @@ namespace djv
         };
 
         //! Image sequence settings widget.
-        class ImageSequenceSettingsWidget : public ISettingsWidget
+        class ImageSeqSettingsWidget : public ISettingsWidget
         {
-            FTK_NON_COPYABLE(ImageSequenceSettingsWidget);
+            FTK_NON_COPYABLE(ImageSeqSettingsWidget);
 
         protected:
             void _init(
@@ -118,12 +118,12 @@ namespace djv
                 const std::shared_ptr<App>&,
                 const std::shared_ptr<IWidget>& parent);
 
-            ImageSequenceSettingsWidget();
+            ImageSeqSettingsWidget();
 
         public:
-            virtual ~ImageSequenceSettingsWidget();
+            virtual ~ImageSeqSettingsWidget();
 
-            static std::shared_ptr<ImageSequenceSettingsWidget> create(
+            static std::shared_ptr<ImageSeqSettingsWidget> create(
                 const std::shared_ptr<ftk::Context>&,
                 const std::shared_ptr<App>&,
                 const std::shared_ptr<IWidget>& parent = nullptr);

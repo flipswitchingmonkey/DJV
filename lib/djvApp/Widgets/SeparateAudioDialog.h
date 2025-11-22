@@ -3,9 +3,8 @@
 
 #pragma once
 
-#include <tlCore/Path.h>
-
 #include <ftk/UI/IDialog.h>
+#include <ftk/Core/Path.h>
 
 namespace djv
 {
@@ -33,8 +32,8 @@ namespace djv
                 const std::shared_ptr<IWidget>& parent = nullptr);
 
             void setCallback(const std::function<void(
-                const tl::file::Path&,
-                const tl::file::Path&)>&);
+                const ftk::Path&,
+                const ftk::Path&)>&);
 
             void setCancelCallback(const std::function<void(void)>&);
 
@@ -66,8 +65,8 @@ namespace djv
 
             //! Set the callback.
             void setCallback(const std::function<void(
-                const tl::file::Path&,
-                const tl::file::Path&)>&);
+                const ftk::Path&,
+                const ftk::Path&)>&);
 
         private:
             FTK_PRIVATE();

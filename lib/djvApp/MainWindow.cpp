@@ -457,7 +457,7 @@ namespace djv
             {
                 for (const auto& i : value)
                 {
-                    app->open(tl::file::Path(i));
+                    app->open(ftk::Path(i));
                 }
             }
         }

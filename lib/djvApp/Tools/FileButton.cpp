@@ -54,7 +54,7 @@ namespace djv
         {
             IButton::_init(context, "djv::app::FileButton", parent);
             FTK_P();
-            const std::string s = ftk::elide(item->path.get(-1, tl::file::PathType::FileName));
+            const std::string s = ftk::elide(item->path.getFileName());
             setText(s);
             setCheckable(true);
             setHStretch(ftk::Stretch::Expanding);

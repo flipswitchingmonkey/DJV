@@ -50,8 +50,8 @@ namespace djv
         }
 
         void SeparateAudioDialog::setCallback(const std::function<void(
-            const tl::file::Path&,
-            const tl::file::Path&)>& value)
+            const ftk::Path&,
+            const ftk::Path&)>& value)
         {
             _p->widget->setCallback(value);
         }

@@ -349,7 +349,7 @@ namespace djv
             _setSizeHint(_p->layout->getSizeHint());
         }
 
-        struct ImageSequenceSettingsWidget::Private
+        struct ImageSeqSettingsWidget::Private
         {
             std::shared_ptr<SettingsModel> model;
 
@@ -361,20 +361,20 @@ namespace djv
             std::shared_ptr<ftk::IntEdit> threadsEdit;
             std::shared_ptr<ftk::FormLayout> layout;
 
-            std::shared_ptr<ftk::ValueObserver<ImageSequenceSettings> > settingsObserver;
+            std::shared_ptr<ftk::ValueObserver<ImageSeqSettings> > settingsObserver;
         };
 
-        void ImageSequenceSettingsWidget::_init(
+        void ImageSeqSettingsWidget::_init(
             const std::shared_ptr<ftk::Context>& context,
             const std::shared_ptr<App>& app,
             const std::shared_ptr<IWidget>& parent)
         {
-            ISettingsWidget::_init(context, "djv::app::ImageSequenceSettingsWidget", parent);
+            ISettingsWidget::_init(context, "djv::app::ImageSeqSettingsWidget", parent);
             FTK_P();
 
             p.model = app->getSettingsModel();
 
-            p.audioComboBox = ftk::ComboBox::create(context, tl::timeline::getImageSequenceAudioLabels());
+            p.audioComboBox = ftk::ComboBox::create(context, tl::timeline::getImageSeqAudioLabels());
             p.audioComboBox->setHStretch(ftk::Stretch::Expanding);
             p.audioComboBox->setTooltip("How audio files are opened for image sequences.");
 
@@ -408,16 +408,16 @@ namespace djv
             p.layout->addRow("Default speed (FPS):", p.defaultSpeedEdit);
             p.layout->addRow("I/O threads:", p.threadsEdit);
 
-            p.settingsObserver = ftk::ValueObserver<ImageSequenceSettings>::create(
-                p.model->observeImageSequence(),
-                [this](const ImageSequenceSettings& value)
+            p.settingsObserver = ftk::ValueObserver<ImageSeqSettings>::create(
+                p.model->observeImageSeq(),
+                [this](const ImageSeqSettings& value)
                 {
                     FTK_P();
                     p.audioComboBox->setCurrentIndex(static_cast<int>(value.audio));
-                    p.audioExtensionsEdit->setText(ftk::join(value.audioExtensions, ' '));
-                    p.layout->setRowVisible(p.audioExtensionsEdit, tl::timeline::ImageSequenceAudio::Extension == value.audio);
+                    p.audioExtensionsEdit->setText(ftk::join(value.audioExts, ' '));
+                    p.layout->setRowVisible(p.audioExtensionsEdit, tl::timeline::ImageSeqAudio::Ext == value.audio);
                     p.audioFileNameEdit->setText(value.audioFileName);
-                    p.layout->setRowVisible(p.audioFileNameEdit, tl::timeline::ImageSequenceAudio::FileName == value.audio);
+                    p.layout->setRowVisible(p.audioFileNameEdit, tl::timeline::ImageSeqAudio::FileName == value.audio);
                     p.maxDigitsEdit->setValue(value.maxDigits);
                     p.defaultSpeedEdit->setValue(value.io.defaultSpeed);
                     p.threadsEdit->setValue(value.io.threadCount);
@@ -427,81 +427,81 @@ namespace djv
                 [this](int value)
                 {
                     FTK_P();
-                    ImageSequenceSettings settings = p.model->getImageSequence();
-                    settings.audio = static_cast<tl::timeline::ImageSequenceAudio>(value);
-                    p.model->setImageSequence(settings);
+                    ImageSeqSettings settings = p.model->getImageSeq();
+                    settings.audio = static_cast<tl::timeline::ImageSeqAudio>(value);
+                    p.model->setImageSeq(settings);
                 });
 
             p.audioExtensionsEdit->setTextCallback(
                 [this](const std::string& value)
                 {
                     FTK_P();
-                    ImageSequenceSettings settings = p.model->getImageSequence();
-                    settings.audioExtensions = ftk::split(value, ' ');
-                    p.model->setImageSequence(settings);
+                    ImageSeqSettings settings = p.model->getImageSeq();
+                    settings.audioExts = ftk::split(value, ' ');
+                    p.model->setImageSeq(settings);
                 });
 
             p.audioFileNameEdit->setTextCallback(
                 [this](const std::string& value)
                 {
                     FTK_P();
-                    ImageSequenceSettings settings = p.model->getImageSequence();
+                    ImageSeqSettings settings = p.model->getImageSeq();
                     settings.audioFileName = value;
-                    p.model->setImageSequence(settings);
+                    p.model->setImageSeq(settings);
                 });
 
             p.maxDigitsEdit->setCallback(
                 [this](int value)
                 {
                     FTK_P();
-                    ImageSequenceSettings settings = p.model->getImageSequence();
+                    ImageSeqSettings settings = p.model->getImageSeq();
                     settings.maxDigits = value;
-                    p.model->setImageSequence(settings);
+                    p.model->setImageSeq(settings);
                 });
 
             p.defaultSpeedEdit->setCallback(
                 [this](double value)
                 {
                     FTK_P();
-                    ImageSequenceSettings settings = p.model->getImageSequence();
+                    ImageSeqSettings settings = p.model->getImageSeq();
                     settings.io.defaultSpeed = value;
-                    p.model->setImageSequence(settings);
+                    p.model->setImageSeq(settings);
                 });
 
             p.threadsEdit->setCallback(
                 [this](int value)
                 {
                     FTK_P();
-                    ImageSequenceSettings settings = p.model->getImageSequence();
+                    ImageSeqSettings settings = p.model->getImageSeq();
                     settings.io.threadCount = value;
-                    p.model->setImageSequence(settings);
+                    p.model->setImageSeq(settings);
                 });
         }
 
-        ImageSequenceSettingsWidget::ImageSequenceSettingsWidget() :
+        ImageSeqSettingsWidget::ImageSeqSettingsWidget() :
             _p(new Private)
         {}
 
-        ImageSequenceSettingsWidget::~ImageSequenceSettingsWidget()
+        ImageSeqSettingsWidget::~ImageSeqSettingsWidget()
         {}
 
-        std::shared_ptr<ImageSequenceSettingsWidget> ImageSequenceSettingsWidget::create(
+        std::shared_ptr<ImageSeqSettingsWidget> ImageSeqSettingsWidget::create(
             const std::shared_ptr<ftk::Context>& context,
             const std::shared_ptr<App>& app,
             const std::shared_ptr<IWidget>& parent)
         {
-            auto out = std::shared_ptr<ImageSequenceSettingsWidget>(new ImageSequenceSettingsWidget);
+            auto out = std::shared_ptr<ImageSeqSettingsWidget>(new ImageSeqSettingsWidget);
             out->_init(context, app, parent);
             return out;
         }
 
-        void ImageSequenceSettingsWidget::setGeometry(const ftk::Box2I& value)
+        void ImageSeqSettingsWidget::setGeometry(const ftk::Box2I& value)
         {
             ISettingsWidget::setGeometry(value);
             _p->layout->setGeometry(value);
         }
 
-        void ImageSequenceSettingsWidget::sizeHintEvent(const ftk::SizeHintEvent& event)
+        void ImageSeqSettingsWidget::sizeHintEvent(const ftk::SizeHintEvent& event)
         {
             ISettingsWidget::sizeHintEvent(event);
             _setSizeHint(_p->layout->getSizeHint());
@@ -1117,7 +1117,7 @@ namespace djv
             auto advancedWidget = AdvancedSettingsWidget::create(context, app);
             auto cacheWidget = CacheSettingsWidget::create(context, app);
             auto fileBrowserWidget = FileBrowserSettingsWidget::create(context, app);
-            auto imageSequenceWidget = ImageSequenceSettingsWidget::create(context, app);
+            auto imageSeqWidget = ImageSeqSettingsWidget::create(context, app);
             auto miscWidget = MiscSettingsWidget::create(context, app);
             auto mouseWidget = MouseSettingsWidget::create(context, app);
             auto shortcutsWidget = ShortcutsSettingsWidget::create(context, app);
@@ -1136,8 +1136,8 @@ namespace djv
             p.bellows["Cache"]->setWidget(cacheWidget);
             p.bellows["FileBrowser"] = ftk::Bellows::create(context, "File Browser", vLayout);
             p.bellows["FileBrowser"]->setWidget(fileBrowserWidget);
-            p.bellows["ImageSequences"] = ftk::Bellows::create(context, "Image Sequences", vLayout);
-            p.bellows["ImageSequences"]->setWidget(imageSequenceWidget);
+            p.bellows["ImageSeqs"] = ftk::Bellows::create(context, "Image Sequences", vLayout);
+            p.bellows["ImageSeqs"]->setWidget(imageSeqWidget);
             p.bellows["Misc"] = ftk::Bellows::create(context, "Miscellaneous", vLayout);
             p.bellows["Misc"]->setWidget(miscWidget);
             p.bellows["Mouse"] = ftk::Bellows::create(context, "Mouse", vLayout);

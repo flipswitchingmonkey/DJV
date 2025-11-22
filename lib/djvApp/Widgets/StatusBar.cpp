@@ -100,7 +100,7 @@ namespace djv
                 [this](const std::shared_ptr<tl::timeline::Player>& player)
                 {
                     _infoUpdate(
-                        player ? player->getPath() : tl::file::Path(),
+                        player ? player->getPath() : ftk::Path(),
                         player ? player->getIOInfo() : tl::io::Info());
                 });
 
@@ -205,11 +205,11 @@ namespace djv
             }
         }
 
-        void StatusBar::_infoUpdate(const tl::file::Path& path, const tl::io::Info& info)
+        void StatusBar::_infoUpdate(const ftk::Path& path, const tl::io::Info& info)
         {
             FTK_P();
             std::vector<std::string> s;
-            s.push_back(ftk::elide(path.get(-1, tl::file::PathType::FileName)));
+            s.push_back(ftk::elide(path.getFileName()));
             if (!info.video.empty())
             {
                 s.push_back(std::string(

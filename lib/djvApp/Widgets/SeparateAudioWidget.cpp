@@ -23,7 +23,7 @@ namespace djv
             std::shared_ptr<ftk::PushButton> cancelButton;
             std::shared_ptr<ftk::VerticalLayout> layout;
 
-            std::function<void(const tl::file::Path&, const tl::file::Path&)> callback;
+            std::function<void(const ftk::Path&, const ftk::Path&)> callback;
             std::function<void(void)> cancelCallback;
         };
 
@@ -80,8 +80,8 @@ namespace djv
                     if (_p->callback)
                     {
                         _p->callback(
-                            tl::file::Path(_p->videoFileEdit->getPath().u8string()),
-                            tl::file::Path(_p->audioFileEdit->getPath().u8string()));
+                            ftk::Path(_p->videoFileEdit->getPath()),
+                            ftk::Path(_p->audioFileEdit->getPath()));
                     }
                 });
 
@@ -112,8 +112,8 @@ namespace djv
         }
 
         void SeparateAudioWidget::setCallback(const std::function<void(
-            const tl::file::Path&,
-            const tl::file::Path&)>& value)
+            const ftk::Path&,
+            const ftk::Path&)>& value)
         {
             _p->callback = value;
         }
