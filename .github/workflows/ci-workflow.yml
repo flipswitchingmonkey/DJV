@@ -1,6 +1,6 @@
 name: CI
 
-on: [push]
+on: workflow_dispatch
 
 jobs:
   linux-build:
@@ -51,8 +51,8 @@ jobs:
       TLRENDER_JPEG: ON
       TLRENDER_TIFF: ON
       TLRENDER_EXR: ON
-      TLRENDER_FFMPEG: OFF
-      TLRENDER_FFMPEG_MINIMAL: ON
+      TLRENDER_FFMPEG: ON
+      TLRENDER_FFMPEG_MINIMAL: OFF
       TLRENDER_OIIO: OFF
       TLRENDER_USD: OFF
       TLRENDER_BMD: OFF
@@ -92,7 +92,7 @@ jobs:
       TLRENDER_TIFF: ON
       TLRENDER_EXR: ON
       TLRENDER_FFMPEG: ON
-      TLRENDER_FFMPEG_MINIMAL: ON
+      TLRENDER_FFMPEG_MINIMAL: OFF
       TLRENDER_OIIO: ON
       TLRENDER_USD: ON
       TLRENDER_BMD: OFF
@@ -127,7 +127,49 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
         name: DJV-Linux-Packages
-        path: build-Release/DJV-*.tar.gz
+        path: build-Releae/DJV-*.tar.gz
+
+  macos-13-build:
+    runs-on: macos-13
+
+    env:
+      TLRENDER_NET: OFF
+      TLRENDER_OCIO: ON
+      TLRENDER_JPEG: ON
+      TLRENDER_TIFF: ON
+      TLRENDER_STB: ON
+      TLRENDER_EXR: ON
+      TLRENDER_FFMPEG: ON
+      TLRENDER_FFMPEG_MINIMAL: OFF
+      TLRENDER_USD: OFF
+      TLRENDER_BMD: OFF
+      TLRENDER_BMD_SDK:
+      FTK_API: GL_4_1
+      CMAKE_OSX_DEPLOYMENT_TARGET: 10.15
+      CMAKE_OSX_ARCHITECTURES: x86_64
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: DJV
+        submodules: recursive
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    # \bug DYLD_LIBRARY_PATH is not being set here?
+    - name: Setup environment
+      run: |
+        echo "$PWD/install-Debug/bin" >> $GITHUB_PATH
+        echo "DYLD_LIBRARY_PATH=$PWD/install-Debug/lib:$DYLD_LIBRARY_PATH" >> $GITHUB_ENV
+        echo "PYTHONPATH=$PWD/install-Debug/lib:$PYTHONPATH" >> $GITHUB_ENV
+        cmake --version
+        python --version
+
+    - name: Build DJV
+      run: |
+        export DYLD_LIBRARY_PATH=$PWD/install-Debug/lib:$DYLD_LIBRARY_PATH
+        sh DJV/etc/macOS/macos-build-gha.sh Debug
 
   macos-build:
     runs-on: macos-latest
@@ -139,7 +181,7 @@ jobs:
       TLRENDER_TIFF: ON
       TLRENDER_EXR: ON
       TLRENDER_FFMPEG: ON
-      TLRENDER_FFMPEG_MINIMAL: ON
+      TLRENDER_FFMPEG_MINIMAL: OFF
       TLRENDER_OIIO: ON
       TLRENDER_USD: OFF
       TLRENDER_BMD: OFF
@@ -182,7 +224,7 @@ jobs:
       TLRENDER_TIFF: ON
       TLRENDER_EXR: ON
       TLRENDER_FFMPEG: ON
-      TLRENDER_FFMPEG_MINIMAL: ON
+      TLRENDER_FFMPEG_MINIMAL: OFF
       TLRENDER_OIIO: ON
       TLRENDER_USD: ON
       TLRENDER_BMD: OFF
@@ -236,7 +278,7 @@ jobs:
       TLRENDER_TIFF: ON
       TLRENDER_EXR: ON
       TLRENDER_FFMPEG: ON
-      TLRENDER_FFMPEG_MINIMAL: ON
+      TLRENDER_FFMPEG_MINIMAL: OFF
       TLRENDER_OIIO: ON
       TLRENDER_USD: OFF
       TLRENDER_BMD: OFF
@@ -278,7 +320,7 @@ jobs:
       TLRENDER_TIFF: ON
       TLRENDER_EXR: ON
       TLRENDER_FFMPEG: ON
-      TLRENDER_FFMPEG_MINIMAL: ON
+      TLRENDER_FFMPEG_MINIMAL: OFF
       TLRENDER_OIIO: ON
       TLRENDER_USD: ON
       TLRENDER_BMD: OFF
