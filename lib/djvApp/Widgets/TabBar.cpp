@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Widgets/TabBar.h>
 
 #include <djvApp/Models/FilesModel.h>
 #include <djvApp/App.h>
 
-#include <feather-tk/ui/TabBar.h>
-#include <feather-tk/core/String.h>
+#include <ftk/UI/TabBar.h>
+#include <ftk/Core/String.h>
 
 namespace djv
 {
@@ -60,7 +59,7 @@ namespace djv
                     for (const auto& item : value)
                     {
                         p.tabBar->addTab(
-                            ftk::elide(item->path.get(-1, tl::file::PathType::FileName)),
+                            ftk::elide(item->path.getFileName()),
                             item->path.get());
                     }
                     p.tabBar->setCurrentTab(p.aIndex);

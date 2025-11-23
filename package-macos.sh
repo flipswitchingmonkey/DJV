@@ -2,26 +2,23 @@
 
 set -x
 
-BUILD_TYPE=Release
-if [ "$#" -eq 1 ]; then
-    BUILD_TYPE=$1
-fi
-
 export FTK_API=GL_4_1
 
+export DJV_PACKAGE=ON
 export TLRENDER_NET=OFF
 export TLRENDER_OCIO=ON
 export TLRENDER_JPEG=ON
 export TLRENDER_TIFF=ON
 export TLRENDER_EXR=ON
 export TLRENDER_FFMPEG=ON
-export TLRENDER_FFMPEG_MINIMAL=OFF
+export TLRENDER_FFMPEG_MINIMAL=ON
 export TLRENDER_OIIO=ON
-export TLRENDER_USD=OFF
+export TLRENDER_USD=ON
 export TLRENDER_BMD=OFF
 export TLRENDER_BMD_SDK=
 
 export CMAKE_OSX_DEPLOYMENT_TARGET=10.15
 export CMAKE_OSX_ARCHITECTURES=arm64
 
-sh DJV/etc/macOS/macos-build-gha.sh $BUILD_TYPE
+sh DJV/etc/macOS/macos-build-gha.sh Release
+cmake --build build-Release --config Release --target package

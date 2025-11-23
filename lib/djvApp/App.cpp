@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/App.h>
 
@@ -40,11 +39,10 @@
 
 #include <tlCore/FileLogSystem.h>
 
-#include <feather-tk/ui/FileBrowser.h>
-#include <feather-tk/ui/Settings.h>
-#include <feather-tk/core/CmdLine.h>
-#include <feather-tk/core/File.h>
-#include <feather-tk/core/Format.h>
+#include <ftk/UI/FileBrowser.h>
+#include <ftk/UI/Settings.h>
+#include <ftk/Core/CmdLine.h>
+#include <ftk/Core/Format.h>
 
 #include <filesystem>
 
@@ -78,8 +76,8 @@ namespace djv
             std::shared_ptr<ftk::CmdLineValueOption<tl::usd::DrawMode> > usdDrawMode;
             std::shared_ptr<ftk::CmdLineValueOption<bool> > usdEnableLighting;
             std::shared_ptr<ftk::CmdLineValueOption<bool> > usdSRGB;
-            std::shared_ptr<ftk::CmdLineValueOption<size_t> > usdStageCache;
-            std::shared_ptr<ftk::CmdLineValueOption<size_t> > usdDiskCache;
+            std::shared_ptr<ftk::CmdLineValueOption<int> > usdStageCache;
+            std::shared_ptr<ftk::CmdLineValueOption<int> > usdDiskCache;
 #endif // TLRENDER_USD
             std::shared_ptr<ftk::CmdLineValueOption<std::string> > logFileName;
             std::shared_ptr<ftk::CmdLineFlagOption> resetSettings;
@@ -268,12 +266,12 @@ namespace djv
                 "Enable sRGB color space.",
                 "USD",
                 true);
-            p.cmdLine.usdStageCache = ftk::CmdLineValueOption<size_t>::create(
+            p.cmdLine.usdStageCache = ftk::CmdLineValueOption<int>::create(
                 { "-usdStageCache" },
                 "Stage cache size.",
                 "USD",
                 10);
-            p.cmdLine.usdDiskCache = ftk::CmdLineValueOption<size_t>::create(
+            p.cmdLine.usdDiskCache = ftk::CmdLineValueOption<int>::create(
                 { "-usdDiskCache" },
                 "Disk cache size in gigabytes. A size of zero disables the cache.",
                 "USD",
@@ -354,12 +352,10 @@ namespace djv
             auto fileBrowserSystem = _context->getSystem<ftk::FileBrowserSystem>();
             fileBrowserSystem->open(
                 p.mainWindow,
-                [this](const std::filesystem::path& value)
+                [this](const ftk::Path& value)
                 {
-                    open(tl::file::Path(value.u8string()));
-                },
-                std::filesystem::path(),
-                ftk::FileBrowserMode::File);
+                    open(value);
+                });
         }
 
         void App::openSeparateAudioDialog()
@@ -368,7 +364,7 @@ namespace djv
             p.separateAudioDialog = SeparateAudioDialog::create(_context);
             p.separateAudioDialog->open(p.mainWindow);
             p.separateAudioDialog->setCallback(
-                [this](const tl::file::Path& value, const tl::file::Path& audio)
+                [this](const ftk::Path& value, const ftk::Path& audio)
                 {
                     open(value, audio);
                     _p->separateAudioDialog->close();
@@ -380,11 +376,11 @@ namespace djv
                 });
         }
 
-        void App::open(const tl::file::Path& path, const tl::file::Path& audioPath)
+        void App::open(const ftk::Path& path, const ftk::Path& audioPath)
         {
             FTK_P();
-            tl::file::PathOptions pathOptions;
-            pathOptions.maxNumberDigits = p.settingsModel->getImageSequence().maxDigits;
+            ftk::PathOptions pathOptions;
+            pathOptions.seqMaxDigits = p.settingsModel->getImageSeq().maxDigits;
             for (const auto& i : tl::timeline::getPaths(_context, path, pathOptions))
             {
                 auto item = std::make_shared<FilesModelItem>();
@@ -493,12 +489,6 @@ namespace djv
             FTK_P();
             if (p.secondaryWindowActive->setIfChanged(value))
             {
-                if (p.secondaryWindow)
-                {
-                    removeWindow(p.secondaryWindow);
-                    p.secondaryWindow.reset();
-                }
-
                 if (value)
                 {
                     p.secondaryWindow = SecondaryWindow::create(
@@ -509,11 +499,14 @@ namespace djv
                         {
                             FTK_P();
                             p.secondaryWindowActive->setIfChanged(false);
-                            removeWindow(p.secondaryWindow);
                             p.secondaryWindow.reset();
                         });
-                    addWindow(p.secondaryWindow);
                     p.secondaryWindow->show();
+                }
+                else if (p.secondaryWindow)
+                {
+                    p.secondaryWindow->close();
+                    p.secondaryWindow.reset();
                 }
             }
         }
@@ -588,6 +581,47 @@ namespace djv
                 }
                 p.settingsModel->setStyle(style);
             }
+#if defined(TLRENDER_USD)
+            if (p.cmdLine.usdRenderWidth->hasValue() ||
+                p.cmdLine.usdComplexity->hasValue() ||
+                p.cmdLine.usdDrawMode->hasValue() ||
+                p.cmdLine.usdEnableLighting->hasValue() ||
+                p.cmdLine.usdSRGB->hasValue() ||
+                p.cmdLine.usdStageCache->hasValue() ||
+                p.cmdLine.usdDiskCache->hasValue())
+            {
+                tl::usd::Options options = p.settingsModel->getUSD();
+                if (p.cmdLine.usdRenderWidth->hasValue())
+                {
+                    options.renderWidth = p.cmdLine.usdRenderWidth->getValue();
+                }
+                if (p.cmdLine.usdComplexity->hasValue())
+                {
+                    options.complexity = p.cmdLine.usdComplexity->getValue();
+                }
+                if (p.cmdLine.usdDrawMode->hasValue())
+                {
+                    options.drawMode = p.cmdLine.usdDrawMode->getValue();
+                }
+                if (p.cmdLine.usdEnableLighting->hasValue())
+                {
+                    options.enableLighting = p.cmdLine.usdEnableLighting->getValue();
+                }
+                if (p.cmdLine.usdSRGB->hasValue())
+                {
+                    options.sRGB = p.cmdLine.usdSRGB->getValue();
+                }
+                if (p.cmdLine.usdStageCache->hasValue())
+                {
+                    options.stageCache = std::max(0, p.cmdLine.usdStageCache->getValue());
+                }
+                if (p.cmdLine.usdDiskCache->hasValue())
+                {
+                    options.diskCache = std::max(0, p.cmdLine.usdDiskCache->getValue());
+                }
+                p.settingsModel->setUSD(options);
+            }
+#endif // TLRENDER_USD
 
             p.timeUnitsModel = TimeUnitsModel::create(_context, p.settings);
             
@@ -595,7 +629,7 @@ namespace djv
 
             p.recentFilesModel = RecentFilesModel::create(_context, p.settings);
             auto fileBrowserSystem = _context->getSystem<ftk::FileBrowserSystem>();
-            fileBrowserSystem->getModel()->setExtensions(tl::timeline::getExtensions(_context));
+            fileBrowserSystem->getModel()->setExts(tl::timeline::getExts(_context));
             fileBrowserSystem->setRecentFilesModel(p.recentFilesModel);
 
             p.colorModel = ColorModel::create(_context, p.settings);
@@ -858,7 +892,7 @@ namespace djv
             {
                 if (p.cmdLine.compareFileName->hasValue())
                 {
-                    open(tl::file::Path(p.cmdLine.compareFileName->getValue()));
+                    open(ftk::Path(p.cmdLine.compareFileName->getValue()));
                     tl::timeline::CompareOptions options;
                     if (p.cmdLine.compare->hasValue())
                     {
@@ -884,8 +918,8 @@ namespace djv
                 for (const auto& input : p.cmdLine.inputs->getList())
                 {
                     open(
-                        tl::file::Path(input),
-                        tl::file::Path(audioFileName));
+                        ftk::Path(input),
+                        ftk::Path(audioFileName));
 
                     if (auto player = p.player->get())
                     {
@@ -925,8 +959,6 @@ namespace djv
             p.mainWindow = MainWindow::create(
                 _context,
                 std::dynamic_pointer_cast<App>(shared_from_this()));
-            addWindow(p.mainWindow);
-            p.mainWindow->show();
 
             p.viewPosZoomObserver = ftk::ValueObserver<std::pair<ftk::V2I, double> >::create(
                 p.mainWindow->getViewport()->observeViewPosAndZoom(),
@@ -952,7 +984,7 @@ namespace djv
                     FTK_P();
                     if (p.secondaryWindow)
                     {
-                        removeWindow(p.secondaryWindow);
+                        p.secondaryWindow->close();
                         p.secondaryWindow.reset();
                     }
                 });
@@ -998,7 +1030,7 @@ namespace djv
         {
             FTK_P();
             tl::io::Options out;
-            out = tl::io::merge(out, tl::io::getOptions(p.settingsModel->getImageSequence().io));
+            out = tl::io::merge(out, tl::io::getOptions(p.settingsModel->getImageSeq().io));
 #if defined(TLRENDER_FFMPEG)
             out = tl::io::merge(out, tl::ffmpeg::getOptions(p.settingsModel->getFFmpeg()));
 #endif // TLRENDER_FFMPEG
@@ -1029,16 +1061,16 @@ namespace djv
                     try
                     {
                         tl::timeline::Options options;
-                        const ImageSequenceSettings imageSequence = p.settingsModel->getImageSequence();
-                        options.imageSequenceAudio = imageSequence.audio;
-                        options.imageSequenceAudioExtensions = imageSequence.audioExtensions;
-                        options.imageSequenceAudioFileName = imageSequence.audioFileName;
+                        const ImageSeqSettings imageSeq = p.settingsModel->getImageSeq();
+                        options.imageSeqAudio = imageSeq.audio;
+                        options.imageSeqAudioExts = imageSeq.audioExts;
+                        options.imageSeqAudioFileName = imageSeq.audioFileName;
                         const AdvancedSettings advanced = p.settingsModel->getAdvanced();
                         options.compat = advanced.compat;
                         options.videoRequestMax = advanced.videoRequestMax;
                         options.audioRequestMax = advanced.audioRequestMax;
                         options.ioOptions = _getIOOptions();
-                        options.pathOptions.maxNumberDigits = imageSequence.maxDigits;
+                        options.pathOptions.seqMaxDigits = imageSeq.maxDigits;
                         auto otioTimeline = files[i]->audioPath.isEmpty() ?
                             tl::timeline::create(_context, files[i]->path, options) :
                             tl::timeline::create(_context, files[i]->path, files[i]->audioPath, options);

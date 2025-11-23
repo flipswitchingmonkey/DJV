@@ -1,13 +1,15 @@
 set(SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
 if(Darwin STREQUAL SYSTEM_NAME)
-    set(SYSTEM_NAME macOS)
+    set(SYSTEM_NAME macos)
 endif()
-set(CPACK_PACKAGE_FILE_NAME
-    ${CMAKE_PROJECT_NAME}-${CMAKE_PROJECT_VERSION}-${SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR})
+string(TOLOWER
+    djv-${CMAKE_PROJECT_VERSION}-${SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}
+    CPACK_PACKAGE_FILE_NAME)
 set(CPACK_PACKAGE_DESCRIPTION "DJV is an open source application for playback and review of image sequences.")
 set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
-set(CPACK_PACKAGE_EXECUTABLES djv DJV)
+set(CPACK_PACKAGE_EXECUTABLES djv "DJV ${CMAKE_PROJECT_VERSION}")
 set(CPACK_PACKAGE_VENDOR "Grizzly Peak 3D")
+set(CPACK_VERBATIM_VARIABLES YES)
 
 if(WIN32)
     set(CPACK_GENERATOR ZIP NSIS)
@@ -199,12 +201,18 @@ elseif(APPLE)
             ${CMAKE_INSTALL_PREFIX}/lib/libMaterialXRenderOsl.dylib)
         set(TBB_DYLIBS
             ${CMAKE_INSTALL_PREFIX}/lib/libtbb.dylib
+            ${CMAKE_INSTALL_PREFIX}/lib/libtbb.12.dylib
+            ${CMAKE_INSTALL_PREFIX}/lib/libtbb.12.12.dylib
             ${CMAKE_INSTALL_PREFIX}/lib/libtbbmalloc.dylib
-            ${CMAKE_INSTALL_PREFIX}/lib/libtbbmalloc_proxy.dylib)
+            ${CMAKE_INSTALL_PREFIX}/lib/libtbbmalloc.2.dylib
+            ${CMAKE_INSTALL_PREFIX}/lib/libtbbmalloc.2.12.dylib
+            ${CMAKE_INSTALL_PREFIX}/lib/libtbbmalloc_proxy.dylib
+            ${CMAKE_INSTALL_PREFIX}/lib/libtbbmalloc_proxy.2.dylib
+            ${CMAKE_INSTALL_PREFIX}/lib/libtbbmalloc_proxy.2.12.dylib)
         set(OSD_DYLIBS
-            ${CMAKE_INSTALL_PREFIX}/lib/libosdCPU.3.6.0.dylib
+            ${CMAKE_INSTALL_PREFIX}/lib/libosdCPU.3.6.1.dylib
             ${CMAKE_INSTALL_PREFIX}/lib/libosdCPU.dylib
-            ${CMAKE_INSTALL_PREFIX}/lib/libosdGPU.3.6.0.dylib
+            ${CMAKE_INSTALL_PREFIX}/lib/libosdGPU.3.6.1.dylib
             ${CMAKE_INSTALL_PREFIX}/lib/libosdGPU.dylib)
         set(USD_DYLIBS
             ${CMAKE_INSTALL_PREFIX}/lib/libusd_ar.dylib
@@ -279,24 +287,34 @@ elseif(APPLE)
             ${CMAKE_INSTALL_PREFIX}/lib/libusd_work.dylib)
         list(APPEND INSTALL_DYLIBS ${MATERIALX_DYLIBS} ${TBB_DYLIBS} ${OSD_DYLIBS} ${USD_DYLIBS})
 
+        # \bug Why do we need to use ".." to avoid installing into the
+        # "Resources" directory in the bundle?
         install(
             DIRECTORY ${CMAKE_INSTALL_PREFIX}/lib/usd
-            DESTINATION lib)
+            DESTINATION ../Frameworks)
         install(
-            DIRECTORY ${CMAKE_INSTALL_PREFIX}/plugin
-            DESTINATION ".")
+            DIRECTORY ${CMAKE_INSTALL_PREFIX}/plugin/usd
+            DESTINATION ../PlugIns)
     endif()
-    
-    install(
-        FILES ${INSTALL_DYLIBS}
-        DESTINATION lib)
 
-    set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
+    # \bug Why do we need to use ".." to avoid installing into the
+    # "Resources" directory in the bundle?
+    install(FILES ${INSTALL_DYLIBS} DESTINATION ../Frameworks)
+
+    set(CPACK_BUNDLE_NAME DJV)
     configure_file(
         ${PROJECT_SOURCE_DIR}/etc/macOS/Info.plist.in
         ${PROJECT_BINARY_DIR}/Info.plist)
     set(CPACK_BUNDLE_PLIST ${PROJECT_BINARY_DIR}/Info.plist)
     set(CPACK_BUNDLE_ICON ${PROJECT_SOURCE_DIR}/etc/macOS/DJV.icns)
+    install(FILES ${PROJECT_BINARY_DIR}/Info.plist DESTINATION "..")
+    install(FILES ${PROJECT_SOURCE_DIR}/etc/macOS/DJV.icns DESTINATION ".")
+
+    set(CPACK_PRE_BUILD_SCRIPTS
+        "${PROJECT_SOURCE_DIR}/cmake/Modules/usdPluginsSymlink.cmake"
+        "${PROJECT_SOURCE_DIR}/cmake/Modules/macOSAppSign.cmake")
+    set(CPACK_POST_BUILD_SCRIPTS
+        "${PROJECT_SOURCE_DIR}/cmake/Modules/macOSPackageSign.cmake")
 
 else()
 
@@ -375,9 +393,9 @@ else()
             ${CMAKE_INSTALL_FULL_LIBDIR}/libtbb.so.12.12)
         set(OSD_LIBS
             ${CMAKE_INSTALL_PREFIX}/lib/libosdCPU.so
-            ${CMAKE_INSTALL_PREFIX}/lib/libosdCPU.so.3.6.0
+            ${CMAKE_INSTALL_PREFIX}/lib/libosdCPU.so.3.6.1
             ${CMAKE_INSTALL_PREFIX}/lib/libosdGPU.so
-            ${CMAKE_INSTALL_PREFIX}/lib/libosdGPU.so.3.6.0)
+            ${CMAKE_INSTALL_PREFIX}/lib/libosdGPU.so.3.6.1)
         set(USD_LIBS
             ${CMAKE_INSTALL_PREFIX}/lib/libusd_arch.so
             ${CMAKE_INSTALL_PREFIX}/lib/libusd_ar.so
@@ -485,12 +503,12 @@ install(
     ${CMAKE_INSTALL_PREFIX}/etc/tlRender/LICENSE_oneTBB.txt
     ${CMAKE_INSTALL_PREFIX}/etc/tlRender/LICENSE_OpenColorIO.txt
     ${CMAKE_INSTALL_PREFIX}/etc/tlRender/LICENSE_OpenEXR.txt
+    ${CMAKE_INSTALL_PREFIX}/etc/tlRender/LICENSE_OpenImageIO.md
     ${CMAKE_INSTALL_PREFIX}/etc/tlRender/LICENSE_OpenSSL.txt
     ${CMAKE_INSTALL_PREFIX}/etc/tlRender/LICENSE_OpenSubdiv.txt
     ${CMAKE_INSTALL_PREFIX}/etc/tlRender/LICENSE_OpenTimelineIO.txt
     ${CMAKE_INSTALL_PREFIX}/etc/tlRender/LICENSE_OpenUSD.txt
     ${CMAKE_INSTALL_PREFIX}/etc/tlRender/LICENSE_pystring.txt
-    ${CMAKE_INSTALL_PREFIX}/etc/tlRender/LICENSE_stb.txt
     ${CMAKE_INSTALL_PREFIX}/etc/tlRender/LICENSE_tlRender.txt
     ${CMAKE_INSTALL_PREFIX}/etc/tlRender/LICENSE_yaml-cpp.txt
     ${CMAKE_INSTALL_PREFIX}/etc/tlRender/LICENSE_zlib.txt

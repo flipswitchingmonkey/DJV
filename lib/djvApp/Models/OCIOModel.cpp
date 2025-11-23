@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Models/OCIOModel.h>
 
-#include <feather-tk/core/Context.h>
-#include <feather-tk/core/OS.h>
+#include <ftk/Core/Context.h>
+#include <ftk/Core/OS.h>
 
 #if defined(TLRENDER_OCIO)
 #include <OpenColorIO/OpenColorIO.h>

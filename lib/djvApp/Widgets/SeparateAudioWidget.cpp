@@ -1,16 +1,15 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Widgets/SeparateAudioDialog.h>
 
-#include <feather-tk/ui/Divider.h>
-#include <feather-tk/ui/FileEdit.h>
-#include <feather-tk/ui/GroupBox.h>
-#include <feather-tk/ui/Label.h>
-#include <feather-tk/ui/PushButton.h>
-#include <feather-tk/ui/RowLayout.h>
-#include <feather-tk/ui/Spacer.h>
+#include <ftk/UI/Divider.h>
+#include <ftk/UI/FileEdit.h>
+#include <ftk/UI/GroupBox.h>
+#include <ftk/UI/Label.h>
+#include <ftk/UI/PushButton.h>
+#include <ftk/UI/RowLayout.h>
+#include <ftk/UI/Spacer.h>
 
 namespace djv
 {
@@ -24,7 +23,7 @@ namespace djv
             std::shared_ptr<ftk::PushButton> cancelButton;
             std::shared_ptr<ftk::VerticalLayout> layout;
 
-            std::function<void(const tl::file::Path&, const tl::file::Path&)> callback;
+            std::function<void(const ftk::Path&, const ftk::Path&)> callback;
             std::function<void(void)> cancelCallback;
         };
 
@@ -32,7 +31,7 @@ namespace djv
             const std::shared_ptr<ftk::Context>& context,
             const std::shared_ptr<IWidget>& parent)
         {
-            IWidget::_init(
+            IMouseWidget::_init(
                 context,
                 "djv::app::SeparateAudioWidget",
                 parent);
@@ -81,8 +80,8 @@ namespace djv
                     if (_p->callback)
                     {
                         _p->callback(
-                            tl::file::Path(_p->videoFileEdit->getPath().u8string()),
-                            tl::file::Path(_p->audioFileEdit->getPath().u8string()));
+                            ftk::Path(_p->videoFileEdit->getPath()),
+                            ftk::Path(_p->audioFileEdit->getPath()));
                     }
                 });
 
@@ -113,8 +112,8 @@ namespace djv
         }
 
         void SeparateAudioWidget::setCallback(const std::function<void(
-            const tl::file::Path&,
-            const tl::file::Path&)>& value)
+            const ftk::Path&,
+            const ftk::Path&)>& value)
         {
             _p->callback = value;
         }
@@ -126,13 +125,12 @@ namespace djv
 
         void SeparateAudioWidget::setGeometry(const ftk::Box2I& value)
         {
-            IWidget::setGeometry(value);
+            IMouseWidget::setGeometry(value);
             _p->layout->setGeometry(value);
         }
 
         void SeparateAudioWidget::sizeHintEvent(const ftk::SizeHintEvent& event)
         {
-            IWidget::sizeHintEvent(event);
             _setSizeHint(_p->layout->getSizeHint());
         }
     }

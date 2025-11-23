@@ -1,15 +1,13 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #pragma once
 
 #include <tlTimeline/CompareOptions.h>
 
-#include <tlCore/Path.h>
-
-#include <feather-tk/core/ObservableList.h>
-#include <feather-tk/core/ObservableValue.h>
+#include <ftk/Core/ObservableList.h>
+#include <ftk/Core/ObservableValue.h>
+#include <ftk/Core/Path.h>
 
 namespace ftk
 {
@@ -23,8 +21,8 @@ namespace djv
         //! Files model item.
         struct FilesModelItem
         {
-            tl::file::Path path;
-            tl::file::Path audioPath;
+            ftk::Path path;
+            ftk::Path audioPath;
 
             std::vector<std::string> videoLayers;
             size_t videoLayer = 0;

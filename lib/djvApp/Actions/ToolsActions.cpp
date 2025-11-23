@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Actions/ToolsActions.h>
 
@@ -30,7 +29,7 @@ namespace djv
             {
                 const auto tool = enums[i];
                 auto action = ftk::Action::create(
-                    getText(tool),
+                    to_string(tool),
                     getIcon(tool),
                     [appWeak, tool](bool value)
                     {

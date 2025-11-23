@@ -1,19 +1,18 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Tools/SettingsToolPrivate.h>
 
 #include <djvApp/App.h>
 
-#include <feather-tk/ui/ComboBox.h>
-#include <feather-tk/ui/ColorSwatch.h>
-#include <feather-tk/ui/FloatEditSlider.h>
-#include <feather-tk/ui/FormLayout.h>
-#include <feather-tk/ui/PushButton.h>
-#include <feather-tk/ui/RowLayout.h>
+#include <ftk/UI/ComboBox.h>
+#include <ftk/UI/ColorSwatch.h>
+#include <ftk/UI/FloatEditSlider.h>
+#include <ftk/UI/FormLayout.h>
+#include <ftk/UI/PushButton.h>
+#include <ftk/UI/RowLayout.h>
 
-#include <feather-tk/core/Format.h>
+#include <ftk/Core/Format.h>
 
 namespace djv
 {
@@ -23,17 +22,7 @@ namespace djv
         {
             std::shared_ptr<SettingsModel> model;
 
-            const std::vector<float> displayScales =
-            {
-                0.F,
-                1.F,
-                1.5F,
-                2.F,
-                2.5F,
-                3.F,
-                3.5F,
-                4.F
-            };
+            const std::vector<float> displayScales = ftk::getDisplayScales();
 
             std::shared_ptr<ftk::ComboBox> colorStyleComboBox;
             std::shared_ptr<ftk::FloatEditSlider> brightnessSlider;

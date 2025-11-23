@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2024 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/App.h>
 
 #include <tlTimelineUI/Init.h>
 #include <tlDevice/Init.h>
 
-#include <feather-tk/core/Context.h>
-#include <feather-tk/core/Error.h>
+#include <ftk/Core/Context.h>
+#include <ftk/Core/Error.h>
 
 #include <iostream>
 

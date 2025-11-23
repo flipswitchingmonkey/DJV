@@ -1,17 +1,16 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #pragma once
 
-#include <feather-tk/ui/IWidget.h>
+#include <ftk/UI/IMouseWidget.h>
 
 namespace djv
 {
     namespace app
     {
         //! Shuttle widget.
-        class ShuttleWidget : public ftk::IWidget
+        class ShuttleWidget : public ftk::IMouseWidget
         {
             FTK_NON_COPYABLE(ShuttleWidget);
 

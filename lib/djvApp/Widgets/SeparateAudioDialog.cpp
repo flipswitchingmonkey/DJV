@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Widgets/SeparateAudioDialog.h>
 
@@ -51,8 +50,8 @@ namespace djv
         }
 
         void SeparateAudioDialog::setCallback(const std::function<void(
-            const tl::file::Path&,
-            const tl::file::Path&)>& value)
+            const ftk::Path&,
+            const ftk::Path&)>& value)
         {
             _p->widget->setCallback(value);
         }

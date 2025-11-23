@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Menus/FileMenu.h>
 
@@ -19,7 +18,7 @@ namespace djv
         struct FileMenu::Private
         {
             std::weak_ptr<App> app;
-            std::vector<std::string> extensions;
+            std::vector<std::string> exts;
             std::shared_ptr<ftk::RecentFilesModel> recentFilesModel;
 
             std::vector<std::shared_ptr<ftk::Action> > currentActions;
@@ -44,7 +43,7 @@ namespace djv
 
             p.app = app;
 
-            p.extensions = tl::timeline::getExtensions(context);
+            p.exts = tl::timeline::getExts(context);
 
             p.recentFilesModel = app->getRecentFilesModel();
 
@@ -142,7 +141,7 @@ namespace djv
             for (size_t i = 0; i < value.size(); ++i)
             {
                 auto action = ftk::Action::create(
-                    value[i]->path.get(-1, tl::file::PathType::FileName),
+                    value[i]->path.getFileName(),
                     [this, i]
                     {
                         close();
@@ -223,7 +222,7 @@ namespace djv
                             {
                                 if (auto app = widget->_p->app.lock())
                                 {
-                                    app->open(tl::file::Path(path.u8string()));
+                                    app->open(ftk::Path(path.u8string()));
                                 }
                                 widget->close();
                             }

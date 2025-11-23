@@ -1,16 +1,13 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #pragma once
 
 #include <tlIO/IO.h>
 
-#include <tlCore/Path.h>
-
-#include <feather-tk/ui/IWidget.h>
-
-#include <feather-tk/core/LogSystem.h>
+#include <ftk/UI/IMouseWidget.h>
+#include <ftk/Core/LogSystem.h>
+#include <ftk/Core/Path.h>
 
 namespace djv
 {
@@ -19,7 +16,7 @@ namespace djv
         class App;
 
         //! Status bar widget.
-        class StatusBar : public ftk::IWidget
+        class StatusBar : public ftk::IMouseWidget
         {
             FTK_NON_COPYABLE(StatusBar);
 
@@ -47,7 +44,7 @@ namespace djv
 
         private:
             void _logUpdate(const std::vector<ftk::LogItem>&);
-            void _infoUpdate(const tl::file::Path&, const tl::io::Info&);
+            void _infoUpdate(const ftk::Path&, const tl::io::Info&);
             void _deviceUpdate(bool);
 
             FTK_PRIVATE();

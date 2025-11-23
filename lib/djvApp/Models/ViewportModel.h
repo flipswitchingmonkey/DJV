@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #pragma once
 
@@ -8,7 +7,7 @@
 #include <tlTimeline/DisplayOptions.h>
 #include <tlTimeline/ForegroundOptions.h>
 
-#include <feather-tk/core/ObservableValue.h>
+#include <ftk/Core/ObservableValue.h>
 
 namespace ftk
 {

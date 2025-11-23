@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Models/ColorModel.h>
 
-#include <feather-tk/ui/Settings.h>
+#include <ftk/UI/Settings.h>
 
 namespace djv
 {

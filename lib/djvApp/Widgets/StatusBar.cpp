@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Widgets/StatusBar.h>
 
@@ -11,15 +10,15 @@
 #include <tlDevice/BMDOutputDevice.h>
 #endif // TLRENDER_BMD
 
-#include <feather-tk/ui/Divider.h>
-#include <feather-tk/ui/Icon.h>
-#include <feather-tk/ui/Label.h>
-#include <feather-tk/ui/RowLayout.h>
-#include <feather-tk/ui/Spacer.h>
-#include <feather-tk/core/Context.h>
-#include <feather-tk/core/Format.h>
-#include <feather-tk/core/String.h>
-#include <feather-tk/core/Timer.h>
+#include <ftk/UI/Divider.h>
+#include <ftk/UI/Icon.h>
+#include <ftk/UI/Label.h>
+#include <ftk/UI/RowLayout.h>
+#include <ftk/UI/Spacer.h>
+#include <ftk/Core/Context.h>
+#include <ftk/Core/Format.h>
+#include <ftk/Core/String.h>
+#include <ftk/Core/Timer.h>
 
 namespace djv
 {
@@ -50,7 +49,7 @@ namespace djv
             const std::shared_ptr<App>& app,
             const std::shared_ptr<IWidget>& parent)
         {
-            IWidget::_init(
+            IMouseWidget::_init(
                 context,
                 "djv::app::StatusBar",
                 parent);
@@ -101,7 +100,7 @@ namespace djv
                 [this](const std::shared_ptr<tl::timeline::Player>& player)
                 {
                     _infoUpdate(
-                        player ? player->getPath() : tl::file::Path(),
+                        player ? player->getPath() : ftk::Path(),
                         player ? player->getIOInfo() : tl::io::Info());
                 });
 
@@ -134,25 +133,24 @@ namespace djv
 
         void StatusBar::setGeometry(const ftk::Box2I & value)
         {
-            IWidget::setGeometry(value);
+            IMouseWidget::setGeometry(value);
             _p->layout->setGeometry(value);
         }
 
         void StatusBar::sizeHintEvent(const ftk::SizeHintEvent & event)
         {
-            IWidget::sizeHintEvent(event);
             _setSizeHint(_p->layout->getSizeHint());
         }
 
         void StatusBar::mousePressEvent(ftk::MouseClickEvent& event)
         {
-            IWidget::mousePressEvent(event);
+            IMouseWidget::mousePressEvent(event);
             event.accept = true;
         }
 
         void StatusBar::mouseReleaseEvent(ftk::MouseClickEvent& event)
         {
-            IWidget::mouseReleaseEvent(event);
+            IMouseWidget::mouseReleaseEvent(event);
             FTK_P();
             event.accept = true;
             Tool tool = Tool::None;
@@ -207,11 +205,11 @@ namespace djv
             }
         }
 
-        void StatusBar::_infoUpdate(const tl::file::Path& path, const tl::io::Info& info)
+        void StatusBar::_infoUpdate(const ftk::Path& path, const tl::io::Info& info)
         {
             FTK_P();
             std::vector<std::string> s;
-            s.push_back(ftk::elide(path.get(-1, tl::file::PathType::FileName)));
+            s.push_back(ftk::elide(path.getFileName()));
             if (!info.video.empty())
             {
                 s.push_back(std::string(

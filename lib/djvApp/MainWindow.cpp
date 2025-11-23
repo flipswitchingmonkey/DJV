@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/MainWindow.h>
 
@@ -48,15 +47,15 @@
 
 #include <tlTimelineGL/Render.h>
 
-#include <feather-tk/ui/ButtonGroup.h>
-#include <feather-tk/ui/Divider.h>
-#include <feather-tk/ui/IconSystem.h>
-#include <feather-tk/ui/Label.h>
-#include <feather-tk/ui/Menu.h>
-#include <feather-tk/ui/MenuBar.h>
-#include <feather-tk/ui/RowLayout.h>
-#include <feather-tk/ui/Splitter.h>
-#include <feather-tk/ui/ToolButton.h>
+#include <ftk/UI/ButtonGroup.h>
+#include <ftk/UI/Divider.h>
+#include <ftk/UI/IconSystem.h>
+#include <ftk/UI/Label.h>
+#include <ftk/UI/Menu.h>
+#include <ftk/UI/MenuBar.h>
+#include <ftk/UI/RowLayout.h>
+#include <ftk/UI/Splitter.h>
+#include <ftk/UI/ToolButton.h>
 
 #if defined(TLRENDER_BMD)
 #include <tlDevice/BMDOutputDevice.h>
@@ -140,13 +139,12 @@ namespace djv
             const std::shared_ptr<App>& app)
         {
             const WindowSettings& settings = app->getSettingsModel()->getWindow();
-            Window::_init(context, "djv", settings.size);
+            Window::_init(context, app, "djv", settings.size);
             FTK_P();
 
             auto iconSystem = context->getSystem<ftk::IconSystem>();
             iconSystem->add("DJV_Icon_128", djv_resource::DJV_Icon_128);
             setIcon(iconSystem->get("DJV_Icon_128", 1.0));
-            setBackgroundRole(ftk::ColorRole::Window);
 
             p.app = app;
             p.settingsModel = app->getSettingsModel();
@@ -459,7 +457,7 @@ namespace djv
             {
                 for (const auto& i : value)
                 {
-                    app->open(tl::file::Path(i));
+                    app->open(ftk::Path(i));
                 }
             }
         }

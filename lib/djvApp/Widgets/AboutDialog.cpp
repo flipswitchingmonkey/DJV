@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Widgets/AboutDialog.h>
 
-#include <feather-tk/ui/Divider.h>
-#include <feather-tk/ui/Label.h>
-#include <feather-tk/ui/PushButton.h>
-#include <feather-tk/ui/RowLayout.h>
-#include <feather-tk/core/Format.h>
-#include <feather-tk/core/OS.h>
+#include <ftk/UI/Divider.h>
+#include <ftk/UI/Label.h>
+#include <ftk/UI/PushButton.h>
+#include <ftk/UI/RowLayout.h>
+#include <ftk/Core/Format.h>
+#include <ftk/Core/OS.h>
 
 namespace djv
 {
@@ -42,8 +41,7 @@ namespace djv
                 ftk::Format(
                     "DJV\n"
                     "Version {0}\n"
-                    "Copyright (c) 2004-2025 Darby Johnston\n"
-                    "All rights reserved."
+                    "Copyright Contributors to the DJV project."
                 ).arg(DJV_VERSION));
 
             p.licenseButton = ftk::PushButton::create(context, "License");
@@ -75,7 +73,7 @@ namespace djv
             p.licenseButton->setClickedCallback(
                 [this]
                 {
-                    ftk::openURL("https://github.com/darbyjohnston/DJV/blob/main/LICENSE.txt");
+                    ftk::openURL("https://github.com/grizzlypeak3d/DJV/blob/main/LICENSE.txt");
                 });
         }
 

@@ -11,10 +11,10 @@ jobs:
       TLRENDER_OCIO: ON
       TLRENDER_JPEG: ON
       TLRENDER_TIFF: ON
-      TLRENDER_STB: ON
       TLRENDER_EXR: ON
       TLRENDER_FFMPEG: ON
       TLRENDER_FFMPEG_MINIMAL: ON
+      TLRENDER_OIIO: ON
       TLRENDER_USD: OFF
       TLRENDER_BMD: OFF
       TLRENDER_BMD_SDK:
@@ -41,6 +41,7 @@ jobs:
     - name: Build DJV
       run: sh DJV/etc/Linux/linux-build-gha.sh Debug
 
+  # \bug Disable building OIIO; it seems there is an error when OCIO is disabled.
   linux-gles2-build:
     runs-on: ubuntu-latest
 
@@ -49,10 +50,10 @@ jobs:
       TLRENDER_OCIO: OFF
       TLRENDER_JPEG: ON
       TLRENDER_TIFF: ON
-      TLRENDER_STB: ON
       TLRENDER_EXR: ON
       TLRENDER_FFMPEG: ON
       TLRENDER_FFMPEG_MINIMAL: OFF
+      TLRENDER_OIIO: OFF
       TLRENDER_USD: OFF
       TLRENDER_BMD: OFF
       TLRENDER_BMD_SDK:
@@ -84,14 +85,15 @@ jobs:
     runs-on: ubuntu-22.04
 
     env:
+      DJV_PACKAGE: ON
       TLRENDER_NET: OFF
       TLRENDER_OCIO: ON
       TLRENDER_JPEG: ON
       TLRENDER_TIFF: ON
-      TLRENDER_STB: ON
       TLRENDER_EXR: ON
       TLRENDER_FFMPEG: ON
       TLRENDER_FFMPEG_MINIMAL: OFF
+      TLRENDER_OIIO: ON
       TLRENDER_USD: ON
       TLRENDER_BMD: OFF
       TLRENDER_BMD_SDK:
@@ -177,10 +179,10 @@ jobs:
       TLRENDER_OCIO: ON
       TLRENDER_JPEG: ON
       TLRENDER_TIFF: ON
-      TLRENDER_STB: ON
       TLRENDER_EXR: ON
       TLRENDER_FFMPEG: ON
       TLRENDER_FFMPEG_MINIMAL: OFF
+      TLRENDER_OIIO: ON
       TLRENDER_USD: OFF
       TLRENDER_BMD: OFF
       TLRENDER_BMD_SDK:
@@ -215,14 +217,15 @@ jobs:
     runs-on: macos-latest
 
     env:
+      DJV_PACKAGE: ON
       TLRENDER_NET: OFF
       TLRENDER_OCIO: ON
       TLRENDER_JPEG: ON
       TLRENDER_TIFF: ON
-      TLRENDER_STB: ON
       TLRENDER_EXR: ON
       TLRENDER_FFMPEG: ON
       TLRENDER_FFMPEG_MINIMAL: OFF
+      TLRENDER_OIIO: ON
       TLRENDER_USD: ON
       TLRENDER_BMD: OFF
       TLRENDER_BMD_SDK:
@@ -273,10 +276,10 @@ jobs:
       TLRENDER_OCIO: ON
       TLRENDER_JPEG: ON
       TLRENDER_TIFF: ON
-      TLRENDER_STB: ON
       TLRENDER_EXR: ON
       TLRENDER_FFMPEG: ON
       TLRENDER_FFMPEG_MINIMAL: OFF
+      TLRENDER_OIIO: ON
       TLRENDER_USD: OFF
       TLRENDER_BMD: OFF
       TLRENDER_BMD_SDK:
@@ -310,14 +313,15 @@ jobs:
     runs-on: windows-latest
 
     env:
+      DJV_PACKAGE: ON
       TLRENDER_NET: OFF
       TLRENDER_OCIO: ON
       TLRENDER_JPEG: ON
       TLRENDER_TIFF: ON
-      TLRENDER_STB: ON
       TLRENDER_EXR: ON
       TLRENDER_FFMPEG: ON
       TLRENDER_FFMPEG_MINIMAL: OFF
+      TLRENDER_OIIO: ON
       TLRENDER_USD: ON
       TLRENDER_BMD: OFF
       TLRENDER_BMD_SDK:
@@ -342,6 +346,7 @@ jobs:
         echo CTEST_OUTPUT_ON_FAILURE=1 >> %GITHUB_ENV%
         cmake --version
         python --version
+        winget install NSIS.NSIS --accept-package-agreements --accept-source-agreements --disable-interactivity
 
     - name: Build DJV
       shell: cmd

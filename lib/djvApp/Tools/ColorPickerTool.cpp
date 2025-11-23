@@ -1,16 +1,15 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Tools/ColorPickerTool.h>
 
 #include <djvApp/Models/ViewportModel.h>
 #include <djvApp/App.h>
 
-#include <feather-tk/ui/ColorWidget.h>
-#include <feather-tk/ui/Label.h>
-#include <feather-tk/ui/RowLayout.h>
-#include <feather-tk/ui/ScrollWidget.h>
+#include <ftk/UI/ColorWidget.h>
+#include <ftk/UI/Label.h>
+#include <ftk/UI/RowLayout.h>
+#include <ftk/UI/ScrollWidget.h>
 
 namespace djv
 {

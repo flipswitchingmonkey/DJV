@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #pragma once
 
 #include <djvApp/Models/ToolsModel.h>
 
-#include <feather-tk/ui/Bellows.h>
+#include <ftk/UI/Bellows.h>
 
 namespace djv
 {

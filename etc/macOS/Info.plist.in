@@ -2,10 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleExecutable</key>
-	<string>Resources/bin/DJV</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.DJV.DJV</string>
+	<string>com.grizzlypeak3d.djv</string>
 	<key>CFBundleName</key>
 	<string>DJV</string>
 	<key>CFBundleIconFile</key>
@@ -17,7 +15,7 @@
 	<key>CFBundleVersion</key>
 	<string>@DJV_VERSION@</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright (c) 2004-2025 Darby Johnston</string>
+	<string>Copyright Contributors to the DJV project.</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
     <key>CFBundleDocumentTypes</key>

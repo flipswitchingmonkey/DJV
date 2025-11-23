@@ -1,18 +1,17 @@
-set BUILD_TYPE=%1
-IF "%BUILD_TYPE%"=="" set BUILD_TYPE=Release
-
 set FTK_API=GL_4_1
 
+set DJV_PACKAGE=ON
 set TLRENDER_NET=OFF
 set TLRENDER_OCIO=ON
 set TLRENDER_JPEG=ON
 set TLRENDER_TIFF=ON
 set TLRENDER_EXR=ON
 set TLRENDER_FFMPEG=ON
-set TLRENDER_FFMPEG_MINIMAL=OFF
+set TLRENDER_FFMPEG_MINIMAL=ON
 set TLRENDER_OIIO=ON
-set TLRENDER_USD=OFF
+set TLRENDER_USD=ON
 set TLRENDER_BMD=OFF
 set TLRENDER_BMD_SDK=
 
-DJV\etc\Windows\windows-build-gha.bat %BUILD_TYPE%
+call DJV\etc\Windows\windows-build-gha.bat Release
+cmake --build build-Release --config Release --target package

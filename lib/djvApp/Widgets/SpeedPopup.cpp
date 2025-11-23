@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Widgets/SpeedPopup.h>
 
-#include <feather-tk/ui/ListItemsWidget.h>
+#include <ftk/UI/ListItemsWidget.h>
 
-#include <feather-tk/core/Format.h>
+#include <ftk/Core/Format.h>
 
 namespace djv
 {

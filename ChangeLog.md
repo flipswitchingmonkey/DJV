@@ -1,21 +1,41 @@
+## 3.2.1
+
+Fixes:
+* macOS package fixes.
+
+
 ## 3.2.0
 
 Features:
-* SDL2 used for window creation
+* SDL2 support for window creation and input handling.
+* Support for OpenImageIO.
+* Signed macOS packages.
 * Library updates:
-    - OpenColorIO v2.4.2
-    - OpenEXR v3.3.5
+    - tlRender 0.13.0
+    - feather-tk 0.5.0
+    - OpenTimelineIO v0.18.0
+    - OpenColorIO v2.5.0
+    - OpenEXR v3.3.6
+    - Imath 3.2.1
     - FFmpeg 8.0
-    - USD v25.08
-    - libpng v1.6.50,
+    - USD v25.11
+    - libpng v1.6.50
     - libjpeg-turbo 3.1.1
-    - SDL2 2.32.8
     - OpenSSL 3.5.2
     - curl 8_15_0
-    - freetype 2-13-3
+    - freetype 2-14-1
+    - minizip 4.0.10
 
 Fixes:
+* Fix application closing when window is minimized.
+* Fix outline with alpha blend modes.
+* Fix outline rendering underneath grid.
+* Fix display scale values.
+* Add the units to the audio sync offset label.
+* Fix opening file associations on macOS.
+* Fixes for keyboard mapping and number pad.
 * Fixes for building with CMake 4.x versions.
+* Fix for cached frames wrapping around the timeline.
 
 
 ## 3.1.1

@@ -1,18 +1,17 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Tools/IToolWidget.h>
 
 #include <djvApp/App.h>
 
-#include <feather-tk/ui/Divider.h>
-#include <feather-tk/ui/Icon.h>
-#include <feather-tk/ui/Label.h>
-#include <feather-tk/ui/ToolButton.h>
-#include <feather-tk/ui/RowLayout.h>
-#include <feather-tk/ui/Settings.h>
-#include <feather-tk/core/Format.h>
+#include <ftk/UI/Divider.h>
+#include <ftk/UI/Icon.h>
+#include <ftk/UI/Label.h>
+#include <ftk/UI/ToolButton.h>
+#include <ftk/UI/RowLayout.h>
+#include <ftk/UI/Settings.h>
+#include <ftk/Core/Format.h>
 
 namespace djv
 {
@@ -50,7 +49,7 @@ namespace djv
             p.icon = ftk::Icon::create(context, getIcon(tool));
             p.icon->setMarginRole(ftk::SizeRole::MarginSmall);
 
-            p.label = ftk::Label::create(context, getText(tool));
+            p.label = ftk::Label::create(context, to_string(tool));
             p.label->setMarginRole(ftk::SizeRole::MarginSmall);
             p.label->setHStretch(ftk::Stretch::Expanding);
 

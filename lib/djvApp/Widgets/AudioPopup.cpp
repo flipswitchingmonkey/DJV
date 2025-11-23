@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Widgets/AudioPopup.h>
 
 #include <djvApp/Models/AudioModel.h>
 #include <djvApp/App.h>
 
-#include <feather-tk/ui/IntEditSlider.h>
-#include <feather-tk/ui/RowLayout.h>
+#include <ftk/UI/IntEditSlider.h>
+#include <ftk/UI/RowLayout.h>
 
 namespace djv
 {

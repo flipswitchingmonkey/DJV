@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Tools/FilesToolPrivate.h>
 
 #include <tlTimelineUI/ThumbnailSystem.h>
 
-#include <feather-tk/ui/DrawUtil.h>
-#include <feather-tk/core/Context.h>
+#include <ftk/UI/DrawUtil.h>
+#include <ftk/Core/Context.h>
 
 #include <optional>
 
@@ -55,7 +54,7 @@ namespace djv
         {
             IButton::_init(context, "djv::app::FileButton", parent);
             FTK_P();
-            const std::string s = ftk::elide(item->path.get(-1, tl::file::PathType::FileName));
+            const std::string s = ftk::elide(item->path.getFileName());
             setText(s);
             setCheckable(true);
             setHStretch(ftk::Stretch::Expanding);
@@ -92,8 +91,8 @@ namespace djv
                 p.thumbnail.request.future.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
             {
                 p.thumbnail.image = p.thumbnail.request.future.get();
-                _setSizeUpdate();
-                _setDrawUpdate();
+                setSizeUpdate();
+                setDrawUpdate();
             }
         }
 

@@ -1,23 +1,22 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Tools/FilesToolPrivate.h>
 
 #include <djvApp/App.h>
 
-#include <feather-tk/ui/Bellows.h>
-#include <feather-tk/ui/ButtonGroup.h>
-#include <feather-tk/ui/ComboBox.h>
-#include <feather-tk/ui/Divider.h>
-#include <feather-tk/ui/FloatEditSlider.h>
-#include <feather-tk/ui/FormLayout.h>
-#include <feather-tk/ui/GridLayout.h>
-#include <feather-tk/ui/Label.h>
-#include <feather-tk/ui/RowLayout.h>
-#include <feather-tk/ui/ScrollWidget.h>
-#include <feather-tk/ui/Settings.h>
-#include <feather-tk/ui/ToolButton.h>
+#include <ftk/UI/Bellows.h>
+#include <ftk/UI/ButtonGroup.h>
+#include <ftk/UI/ComboBox.h>
+#include <ftk/UI/Divider.h>
+#include <ftk/UI/FloatEditSlider.h>
+#include <ftk/UI/FormLayout.h>
+#include <ftk/UI/GridLayout.h>
+#include <ftk/UI/Label.h>
+#include <ftk/UI/RowLayout.h>
+#include <ftk/UI/ScrollWidget.h>
+#include <ftk/UI/Settings.h>
+#include <ftk/UI/ToolButton.h>
 
 namespace djv
 {

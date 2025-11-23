@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Tools/ColorToolPrivate.h>
 
@@ -8,19 +7,19 @@
 #include <djvApp/Models/ViewportModel.h>
 #include <djvApp/App.h>
 
-#include <feather-tk/ui/Bellows.h>
-#include <feather-tk/ui/ButtonGroup.h>
-#include <feather-tk/ui/CheckBox.h>
-#include <feather-tk/ui/ComboBox.h>
-#include <feather-tk/ui/FileEdit.h>
-#include <feather-tk/ui/FloatEdit.h>
-#include <feather-tk/ui/FloatEditSlider.h>
-#include <feather-tk/ui/FormLayout.h>
-#include <feather-tk/ui/Label.h>
-#include <feather-tk/ui/RowLayout.h>
-#include <feather-tk/ui/ScrollWidget.h>
-#include <feather-tk/ui/Settings.h>
-#include <feather-tk/ui/StackLayout.h>
+#include <ftk/UI/Bellows.h>
+#include <ftk/UI/ButtonGroup.h>
+#include <ftk/UI/CheckBox.h>
+#include <ftk/UI/ComboBox.h>
+#include <ftk/UI/FileEdit.h>
+#include <ftk/UI/FloatEdit.h>
+#include <ftk/UI/FloatEditSlider.h>
+#include <ftk/UI/FormLayout.h>
+#include <ftk/UI/Label.h>
+#include <ftk/UI/RowLayout.h>
+#include <ftk/UI/ScrollWidget.h>
+#include <ftk/UI/Settings.h>
+#include <ftk/UI/StackLayout.h>
 
 namespace djv
 {
@@ -116,7 +115,7 @@ namespace djv
                     FTK_P();
                     p.enabledCheckBox->setChecked(value.enabled);
                     p.configComboBox->setCurrentIndex(static_cast<int>(value.config));
-                    p.fileEdit->setPath(std::filesystem::u8path(value.fileName));
+                    p.fileEdit->setPath(ftk::Path(value.fileName));
                     p.formLayout->setRowVisible(p.fileEdit, tl::timeline::OCIOConfig::File == value.config);
                     p.inputComboBox->setItems(value.inputs);
                     p.inputComboBox->setCurrentIndex(value.inputIndex);
@@ -141,9 +140,9 @@ namespace djv
                 });
 
             p.fileEdit->setCallback(
-                [this](const std::filesystem::path& value)
+                [this](const ftk::Path& value)
                 {
-                    _p->ocioModel->setFileName(value.u8string());
+                    _p->ocioModel->setFileName(value.get());
                 });
 
             p.inputComboBox->setIndexCallback(
@@ -238,7 +237,7 @@ namespace djv
                 [this](const tl::timeline::LUTOptions& value)
                 {
                     _p->enabledCheckBox->setChecked(value.enabled);
-                    _p->fileEdit->setPath(std::filesystem::u8path(value.fileName));
+                    _p->fileEdit->setPath(ftk::Path(value.fileName));
                     _p->orderComboBox->setCurrentIndex(static_cast<size_t>(value.order));
                 });
 
@@ -255,13 +254,13 @@ namespace djv
                 });
 
             p.fileEdit->setCallback(
-                [appWeak](const std::filesystem::path& value)
+                [appWeak](const ftk::Path& value)
                 {
                     if (auto app = appWeak.lock())
                     {
                         auto options = app->getColorModel()->getLUTOptions();
                         options.enabled = true;
-                        options.fileName = value.u8string();
+                        options.fileName = value.get();
                         app->getColorModel()->setLUTOptions(options);
                     }
                 });

@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #pragma once
 
-#include <tlCore/Path.h>
-
-#include <feather-tk/ui/IDialog.h>
+#include <ftk/UI/IDialog.h>
+#include <ftk/Core/Path.h>
 
 namespace djv
 {
@@ -15,7 +13,7 @@ namespace djv
         class App;
 
         //! Separate audio widget.
-        class SeparateAudioWidget : public ftk::IWidget
+        class SeparateAudioWidget : public ftk::IMouseWidget
         {
             FTK_NON_COPYABLE(SeparateAudioWidget);
 
@@ -34,8 +32,8 @@ namespace djv
                 const std::shared_ptr<IWidget>& parent = nullptr);
 
             void setCallback(const std::function<void(
-                const tl::file::Path&,
-                const tl::file::Path&)>&);
+                const ftk::Path&,
+                const ftk::Path&)>&);
 
             void setCancelCallback(const std::function<void(void)>&);
 
@@ -67,8 +65,8 @@ namespace djv
 
             //! Set the callback.
             void setCallback(const std::function<void(
-                const tl::file::Path&,
-                const tl::file::Path&)>&);
+                const ftk::Path&,
+                const ftk::Path&)>&);
 
         private:
             FTK_PRIVATE();

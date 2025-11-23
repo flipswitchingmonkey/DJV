@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Tools/ExportTool.h>
 
@@ -20,21 +19,21 @@
 #include <tlIO/FFmpeg.h>
 #endif // TLRENDER_FFMPEG
 
-#include <feather-tk/ui/ComboBox.h>
-#include <feather-tk/ui/DialogSystem.h>
-#include <feather-tk/ui/FileEdit.h>
-#include <feather-tk/ui/FormLayout.h>
-#include <feather-tk/ui/IntEdit.h>
-#include <feather-tk/ui/LineEdit.h>
-#include <feather-tk/ui/ProgressDialog.h>
-#include <feather-tk/ui/PushButton.h>
-#include <feather-tk/ui/RowLayout.h>
-#include <feather-tk/ui/ScrollWidget.h>
-#include <feather-tk/gl/GL.h>
-#include <feather-tk/gl/OffscreenBuffer.h>
-#include <feather-tk/gl/Util.h>
-#include <feather-tk/core/Format.h>
-#include <feather-tk/core/Timer.h>
+#include <ftk/UI/ComboBox.h>
+#include <ftk/UI/DialogSystem.h>
+#include <ftk/UI/FileEdit.h>
+#include <ftk/UI/FormLayout.h>
+#include <ftk/UI/IntEdit.h>
+#include <ftk/UI/LineEdit.h>
+#include <ftk/UI/ProgressDialog.h>
+#include <ftk/UI/PushButton.h>
+#include <ftk/UI/RowLayout.h>
+#include <ftk/UI/ScrollWidget.h>
+#include <ftk/GL/GL.h>
+#include <ftk/GL/OffscreenBuffer.h>
+#include <ftk/GL/Util.h>
+#include <ftk/Core/Format.h>
+#include <ftk/Core/Timer.h>
 
 namespace djv
 {
@@ -45,15 +44,15 @@ namespace djv
             std::weak_ptr<App> app;
             std::shared_ptr<tl::timeline::Player> player;
             std::shared_ptr<SettingsModel> model;
-            std::vector<std::string> imageExtensions;
-            std::vector<std::string> movieExtensions;
+            std::vector<std::string> imageExts;
+            std::vector<std::string> movieExts;
             std::vector<std::string> movieCodecs;
 
             struct ExportData
             {
                 OTIO_NS::TimeRange range;
                 int64_t frame = 0;
-                tl::file::Path path;
+                ftk::Path path;
                 ftk::ImageInfo info;
                 std::shared_ptr<tl::io::IWrite> writer;
                 tl::timeline::OCIOOptions ocioOptions;
@@ -62,22 +61,23 @@ namespace djv
                 tl::timeline::DisplayOptions displayOptions;
                 ftk::ImageType colorBuffer = ftk::ImageType::RGBA_U8;
                 std::shared_ptr<ftk::gl::OffscreenBuffer> buffer;
+                std::shared_ptr<ftk::gl::OffscreenBuffer> buffer2;
                 std::shared_ptr<tl::timeline::IRender> render;
                 GLenum glFormat = 0;
                 GLenum glType = 0;
             };
             std::unique_ptr<ExportData> exportData;
 
-            std::shared_ptr<ftk::FileEdit> directoryEdit;
+            std::shared_ptr<ftk::FileEdit> dirEdit;
             std::shared_ptr<ftk::ComboBox> renderSizeComboBox;
             std::shared_ptr<ftk::IntEdit> renderWidthEdit;
             std::shared_ptr<ftk::IntEdit> renderHeightEdit;
             std::shared_ptr<ftk::ComboBox> fileTypeComboBox;
-            std::shared_ptr<ftk::LineEdit> imageBaseNameEdit;
+            std::shared_ptr<ftk::LineEdit> imageBaseEdit;
             std::shared_ptr<ftk::IntEdit> imageZeroPadEdit;
-            std::shared_ptr<ftk::ComboBox> imageExtensionComboBox;
-            std::shared_ptr<ftk::LineEdit> movieBaseNameEdit;
-            std::shared_ptr<ftk::ComboBox> movieExtensionComboBox;
+            std::shared_ptr<ftk::ComboBox> imageExtComboBox;
+            std::shared_ptr<ftk::LineEdit> movieBaseEdit;
+            std::shared_ptr<ftk::ComboBox> movieExtComboBox;
             std::shared_ptr<ftk::ComboBox> movieCodecComboBox;
             std::shared_ptr<ftk::PushButton> exportButton;
             std::shared_ptr<ftk::HorizontalLayout> customSizeLayout;
@@ -107,16 +107,16 @@ namespace djv
             p.app = app;
             p.model = app->getSettingsModel();
             auto ioSystem = context->getSystem<tl::io::WriteSystem>();
-            auto extensions = ioSystem->getExtensions(static_cast<int>(tl::io::FileType::Sequence));
-            p.imageExtensions.insert(p.imageExtensions.end(), extensions.begin(), extensions.end());
-            extensions = ioSystem->getExtensions(static_cast<int>(tl::io::FileType::Media));
-            p.movieExtensions.insert(p.movieExtensions.end(), extensions.begin(), extensions.end());
+            auto exts = ioSystem->getExts(static_cast<int>(tl::io::FileType::Seq));
+            p.imageExts.insert(p.imageExts.end(), exts.begin(), exts.end());
+            exts = ioSystem->getExts(static_cast<int>(tl::io::FileType::Media));
+            p.movieExts.insert(p.movieExts.end(), exts.begin(), exts.end());
 #if defined(TLRENDER_FFMPEG)
             auto ffmpegPlugin = ioSystem->getPlugin<tl::ffmpeg::WritePlugin>();
             p.movieCodecs = ffmpegPlugin->getCodecs();
 #endif // TLRENDER_FFMPEG
 
-            p.directoryEdit = ftk::FileEdit::create(context, ftk::FileBrowserMode::Dir);
+            p.dirEdit = ftk::FileEdit::create(context, ftk::FileBrowserMode::Dir);
 
             p.renderSizeComboBox = ftk::ComboBox::create(context, getExportRenderSizeLabels());
             p.renderWidthEdit = ftk::IntEdit::create(context);
@@ -126,13 +126,13 @@ namespace djv
 
             p.fileTypeComboBox = ftk::ComboBox::create(context, getExportFileTypeLabels());
 
-            p.imageBaseNameEdit = ftk::LineEdit::create(context);
+            p.imageBaseEdit = ftk::LineEdit::create(context);
             p.imageZeroPadEdit = ftk::IntEdit::create(context);
             p.imageZeroPadEdit->setRange(0, 16);
-            p.imageExtensionComboBox = ftk::ComboBox::create(context, p.imageExtensions);
+            p.imageExtComboBox = ftk::ComboBox::create(context, p.imageExts);
 
-            p.movieBaseNameEdit = ftk::LineEdit::create(context);
-            p.movieExtensionComboBox = ftk::ComboBox::create(context, p.movieExtensions);
+            p.movieBaseEdit = ftk::LineEdit::create(context);
+            p.movieExtComboBox = ftk::ComboBox::create(context, p.movieExts);
             p.movieCodecComboBox = ftk::ComboBox::create(context, p.movieCodecs);
 
             p.exportButton = ftk::PushButton::create(context, "Export");
@@ -142,7 +142,7 @@ namespace djv
             p.layout->setSpacingRole(ftk::SizeRole::SpacingSmall);
             p.formLayout = ftk::FormLayout::create(context, p.layout);
             p.formLayout->setSpacingRole(ftk::SizeRole::SpacingSmall);
-            p.formLayout->addRow("Directory:", p.directoryEdit);
+            p.formLayout->addRow("Directory:", p.dirEdit);
             p.formLayout->addRow("Render size:", p.renderSizeComboBox);
             p.customSizeLayout = ftk::HorizontalLayout::create(context);
             p.customSizeLayout->setSpacingRole(ftk::SizeRole::SpacingSmall);
@@ -150,11 +150,11 @@ namespace djv
             p.renderHeightEdit->setParent(p.customSizeLayout);
             p.formLayout->addRow("Custom size:", p.customSizeLayout);
             p.formLayout->addRow("File type:", p.fileTypeComboBox);
-            p.formLayout->addRow("Base name:", p.imageBaseNameEdit);
+            p.formLayout->addRow("Base name:", p.imageBaseEdit);
             p.formLayout->addRow("Zero padding:", p.imageZeroPadEdit);
-            p.formLayout->addRow("Extension:", p.imageExtensionComboBox);
-            p.formLayout->addRow("Base name:", p.movieBaseNameEdit);
-            p.formLayout->addRow("Extension:", p.movieExtensionComboBox);
+            p.formLayout->addRow("Extension:", p.imageExtComboBox);
+            p.formLayout->addRow("Base name:", p.movieBaseEdit);
+            p.formLayout->addRow("Extension:", p.movieExtComboBox);
             p.formLayout->addRow("Codec:", p.movieCodecComboBox);
             p.exportButton->setParent(p.layout);
 
@@ -179,12 +179,12 @@ namespace djv
                     _widgetUpdate(value);
                 });
 
-            p.directoryEdit->setCallback(
-                [this](const std::filesystem::path& value)
+            p.dirEdit->setCallback(
+                [this](const ftk::Path& value)
                 {
                     FTK_P();
                     auto options = p.model->getExport();
-                    options.directory = value.u8string();
+                    options.dir = value.get();
                     p.model->setExport(options);
                 });
 
@@ -224,12 +224,12 @@ namespace djv
                     p.model->setExport(options);
                 });
 
-            p.imageBaseNameEdit->setTextCallback(
+            p.imageBaseEdit->setTextCallback(
                 [this](const std::string& value)
                 {
                     FTK_P();
                     auto options = p.model->getExport();
-                    options.imageBaseName = value;
+                    options.imageBase = value;
                     p.model->setExport(options);
                 });
 
@@ -242,35 +242,35 @@ namespace djv
                     p.model->setExport(options);
                 });
 
-            p.imageExtensionComboBox->setIndexCallback(
+            p.imageExtComboBox->setIndexCallback(
                 [this](int value)
                 {
                     FTK_P();
-                    if (value >= 0 && value < p.imageExtensions.size())
+                    if (value >= 0 && value < p.imageExts.size())
                     {
                         auto options = p.model->getExport();
-                        options.imageExtension = p.imageExtensions[value];
+                        options.imageExt = p.imageExts[value];
                         p.model->setExport(options);
                     }
                 });
 
-            p.movieBaseNameEdit->setTextCallback(
+            p.movieBaseEdit->setTextCallback(
                 [this](const std::string& value)
                 {
                     FTK_P();
                     auto options = p.model->getExport();
-                    options.movieBaseName = value;
+                    options.movieBase = value;
                     p.model->setExport(options);
                 });
 
-            p.movieExtensionComboBox->setIndexCallback(
+            p.movieExtComboBox->setIndexCallback(
                 [this](int value)
                 {
                     FTK_P();
-                    if (value >= 0 && value < p.movieExtensions.size())
+                    if (value >= 0 && value < p.movieExts.size())
                     {
                         auto options = p.model->getExport();
-                        options.movieExtension = p.movieExtensions[value];
+                        options.movieExt = p.movieExts[value];
                         p.model->setExport(options);
                     }
                 });
@@ -317,37 +317,37 @@ namespace djv
         void ExportTool::_widgetUpdate(const ExportSettings& settings)
         {
             FTK_P();
-            p.directoryEdit->setPath(std::filesystem::u8path(settings.directory));
+            p.dirEdit->setPath(ftk::Path(settings.dir));
             p.renderSizeComboBox->setCurrentIndex(static_cast<int>(settings.renderSize));
             p.renderWidthEdit->setValue(settings.customSize.w);
             p.renderHeightEdit->setValue(settings.customSize.h);
             p.fileTypeComboBox->setCurrentIndex(static_cast<int>(settings.fileType));
             
-            p.imageBaseNameEdit->setText(settings.imageBaseName);
-            auto i = std::find(p.imageExtensions.begin(), p.imageExtensions.end(), settings.imageExtension);
-            p.imageExtensionComboBox->setCurrentIndex(i != p.imageExtensions.end() ? (i - p.imageExtensions.begin()) : -1);
+            p.imageBaseEdit->setText(settings.imageBase);
+            auto i = std::find(p.imageExts.begin(), p.imageExts.end(), settings.imageExt);
+            p.imageExtComboBox->setCurrentIndex(i != p.imageExts.end() ? (i - p.imageExts.begin()) : -1);
 
-            p.movieBaseNameEdit->setText(settings.movieBaseName);
-            i = std::find(p.movieExtensions.begin(), p.movieExtensions.end(), settings.movieExtension);
-            p.movieExtensionComboBox->setCurrentIndex(i != p.movieExtensions.end() ? (i - p.movieExtensions.begin()) : -1);
+            p.movieBaseEdit->setText(settings.movieBase);
+            i = std::find(p.movieExts.begin(), p.movieExts.end(), settings.movieExt);
+            p.movieExtComboBox->setCurrentIndex(i != p.movieExts.end() ? (i - p.movieExts.begin()) : -1);
             i = std::find(p.movieCodecs.begin(), p.movieCodecs.end(), settings.movieCodec);
             p.movieCodecComboBox->setCurrentIndex(i != p.movieCodecs.end() ? (i - p.movieCodecs.begin()) : -1);
 
             p.formLayout->setRowVisible(p.customSizeLayout, ExportRenderSize::Custom == settings.renderSize);
             p.formLayout->setRowVisible(
-                p.imageBaseNameEdit,
+                p.imageBaseEdit,
                 ExportFileType::Image == settings.fileType ||
-                ExportFileType::Sequence == settings.fileType);
+                ExportFileType::Seq == settings.fileType);
             p.formLayout->setRowVisible(
                 p.imageZeroPadEdit,
                 ExportFileType::Image == settings.fileType ||
-                ExportFileType::Sequence == settings.fileType);
+                ExportFileType::Seq == settings.fileType);
             p.formLayout->setRowVisible(
-                p.imageExtensionComboBox,
+                p.imageExtComboBox,
                 ExportFileType::Image == settings.fileType ||
-                ExportFileType::Sequence == settings.fileType);
-            p.formLayout->setRowVisible(p.movieBaseNameEdit, ExportFileType::Movie == settings.fileType);
-            p.formLayout->setRowVisible(p.movieExtensionComboBox, ExportFileType::Movie == settings.fileType);
+                ExportFileType::Seq == settings.fileType);
+            p.formLayout->setRowVisible(p.movieBaseEdit, ExportFileType::Movie == settings.fileType);
+            p.formLayout->setRowVisible(p.movieExtComboBox, ExportFileType::Movie == settings.fileType);
             p.formLayout->setRowVisible(p.movieCodecComboBox, ExportFileType::Movie == settings.fileType);
         }
 
@@ -401,26 +401,25 @@ namespace djv
                     switch (options.fileType)
                     {
                     case ExportFileType::Image:
-                    case ExportFileType::Sequence:
+                    case ExportFileType::Seq:
                     {
                         std::stringstream ss;
-                        ss << options.imageBaseName;
+                        ss << options.imageBase;
                         ss << std::setfill('0') << std::setw(options.imageZeroPad) << p.exportData->range.start_time().value();
-                        ss << options.imageExtension;
+                        ss << options.imageExt;
                         fileName = ss.str();
                         break;
                     }
                     case ExportFileType::Movie:
                     {
                         std::stringstream ss;
-                        ss << options.movieBaseName << options.movieExtension;
+                        ss << options.movieBase << options.movieExt;
                         fileName = ss.str();
                         break;
                     }
                     default: break;
                     }
-                    p.exportData->path = tl::file::Path((std::filesystem::u8path(options.directory) /
-                        std::filesystem::u8path(fileName)).u8string());
+                    p.exportData->path = ftk::Path(options.dir, fileName);
 
                     // Get the writer.
                     auto ioSystem = context->getSystem<tl::io::WriteSystem>();
@@ -463,6 +462,9 @@ namespace djv
                     ftk::gl::OffscreenBufferOptions offscreenBufferOptions;
                     offscreenBufferOptions.color = p.exportData->colorBuffer;
                     p.exportData->buffer = ftk::gl::OffscreenBuffer::create(
+                        p.exportData->info.size,
+                        offscreenBufferOptions);
+                    p.exportData->buffer2 = ftk::gl::OffscreenBuffer::create(
                         p.exportData->info.size,
                         offscreenBufferOptions);
 
@@ -534,25 +536,37 @@ namespace djv
                 auto video = p.player->getTimeline()->getVideo(t, ioOptions).future.get();
 
                 // Render the video.
-                ftk::gl::OffscreenBufferBinding binding(p.exportData->buffer);
+                {
+                    ftk::gl::OffscreenBufferBinding binding(p.exportData->buffer);
+                    p.exportData->render->begin(p.exportData->info.size);
+                    p.exportData->render->setOCIOOptions(p.exportData->ocioOptions);
+                    p.exportData->render->setLUTOptions(p.exportData->lutOptions);
+                    p.exportData->render->drawVideo(
+                        { video },
+                        { ftk::Box2I(0, 0, p.exportData->info.size.w, p.exportData->info.size.h) },
+                        { p.exportData->imageOptions },
+                        { p.exportData->displayOptions },
+                        tl::timeline::CompareOptions(),
+                        p.exportData->colorBuffer);
+                    p.exportData->render->end();
+                }
+
+                // Flip the image.
+                ftk::gl::OffscreenBufferBinding binding(p.exportData->buffer2);
                 p.exportData->render->begin(p.exportData->info.size);
-                p.exportData->render->setOCIOOptions(p.exportData->ocioOptions);
-                p.exportData->render->setLUTOptions(p.exportData->lutOptions);
-                p.exportData->render->drawVideo(
-                    { video },
-                    { ftk::Box2I(0, 0, p.exportData->info.size.w, p.exportData->info.size.h) },
-                    { p.exportData->imageOptions },
-                    { p.exportData->displayOptions },
-                    tl::timeline::CompareOptions(),
-                    p.exportData->colorBuffer);
+                p.exportData->render->setOCIOOptions(tl::timeline::OCIOOptions());
+                p.exportData->render->setLUTOptions(tl::timeline::LUTOptions());
+                p.exportData->render->drawTexture(
+                    p.exportData->buffer->getColorID(),
+                    ftk::Box2I(0, 0, p.exportData->info.size.w, p.exportData->info.size.h));
                 p.exportData->render->end();
 
                 // Write the output image.
                 auto image = ftk::Image::create(p.exportData->info);
                 glPixelStorei(GL_PACK_ALIGNMENT, p.exportData->info.layout.alignment);
-#if defined(dtk_API_GL_4_1)
+#if defined(FTK_API_GL_4_1)
                 glPixelStorei(GL_PACK_SWAP_BYTES, p.exportData->info.layout.endian != ftk::getEndian());
-#endif // dtk_API_GL_4_1
+#endif // FTK_API_GL_4_1
                 glReadPixels(
                     0,
                     0,

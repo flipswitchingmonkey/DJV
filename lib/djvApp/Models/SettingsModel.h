@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #pragma once
 
@@ -10,11 +9,11 @@
 
 #include <tlTimeline/Player.h>
 
-#include <feather-tk/ui/App.h>
-#include <feather-tk/ui/FileBrowser.h>
-#include <feather-tk/core/ObservableValue.h>
+#include <ftk/UI/App.h>
+#include <ftk/UI/FileBrowser.h>
+#include <ftk/Core/ObservableValue.h>
 
-#include <tlIO/SequenceIO.h>
+#include <tlIO/SeqIO.h>
 #if defined(TLRENDER_FFMPEG)
 #include <tlIO/FFmpeg.h>
 #endif // TLRENDER_FFMPEG
@@ -67,7 +66,7 @@ namespace djv
         enum class ExportFileType
         {
             Image,
-            Sequence,
+            Seq,
             Movie,
 
             Count,
@@ -78,17 +77,17 @@ namespace djv
         //! Export settings.
         struct ExportSettings
         {
-            std::string directory;
+            std::string dir;
             ExportRenderSize renderSize = ExportRenderSize::Default;
             ftk::Size2I customSize = ftk::Size2I(1920, 1080);
             ExportFileType fileType = ExportFileType::Image;
 
-            std::string imageBaseName = "render.";
+            std::string imageBase = "render.";
             size_t imageZeroPad = 0;
-            std::string imageExtension = ".tif";
+            std::string imageExt = ".tif";
 
-            std::string movieBaseName = "render";
-            std::string movieExtension = ".mov";
+            std::string movieBase = "render";
+            std::string movieExt = ".mov";
             std::string movieCodec = "mjpeg";
 
             bool operator == (const ExportSettings&) const;
@@ -101,23 +100,23 @@ namespace djv
             bool nativeFileDialog = true;
             std::string path;
             ftk::FileBrowserOptions options;
-            std::string extension;
+            std::string ext;
 
             bool operator == (const FileBrowserSettings&) const;
             bool operator != (const FileBrowserSettings&) const;
         };
 
         //! Image sequence settings.
-        struct ImageSequenceSettings
+        struct ImageSeqSettings
         {
-            tl::timeline::ImageSequenceAudio audio = tl::timeline::Options().imageSequenceAudio;
-            std::vector<std::string> audioExtensions = tl::timeline::Options().imageSequenceAudioExtensions;
-            std::string audioFileName = tl::timeline::Options().imageSequenceAudioFileName;
+            tl::timeline::ImageSeqAudio audio = tl::timeline::Options().imageSeqAudio;
+            std::vector<std::string> audioExts = tl::timeline::Options().imageSeqAudioExts;
+            std::string audioFileName = tl::timeline::Options().imageSeqAudioFileName;
             size_t maxDigits = 9;
-            tl::io::SequenceOptions io;
+            tl::io::SeqOptions io;
 
-            bool operator == (const ImageSequenceSettings&) const;
-            bool operator != (const ImageSequenceSettings&) const;
+            bool operator == (const ImageSeqSettings&) const;
+            bool operator != (const ImageSeqSettings&) const;
         };
 
         //! Miscellaneous settings.
@@ -318,9 +317,9 @@ namespace djv
             //! \name Image Sequences
             ///@{
 
-            const ImageSequenceSettings& getImageSequence() const;
-            std::shared_ptr<ftk::IObservableValue<ImageSequenceSettings> > observeImageSequence() const;
-            void setImageSequence(const ImageSequenceSettings&);
+            const ImageSeqSettings& getImageSeq() const;
+            std::shared_ptr<ftk::IObservableValue<ImageSeqSettings> > observeImageSeq() const;
+            void setImageSeq(const ImageSeqSettings&);
 
             ///@}
 
@@ -410,7 +409,7 @@ namespace djv
         void to_json(nlohmann::json&, const AdvancedSettings&);
         void to_json(nlohmann::json&, const ExportSettings&);
         void to_json(nlohmann::json&, const FileBrowserSettings&);
-        void to_json(nlohmann::json&, const ImageSequenceSettings&);
+        void to_json(nlohmann::json&, const ImageSeqSettings&);
         void to_json(nlohmann::json&, const MiscSettings&);
         void to_json(nlohmann::json&, const MouseActionBinding&);
         void to_json(nlohmann::json&, const MouseSettings&);
@@ -422,7 +421,7 @@ namespace djv
         void from_json(const nlohmann::json&, AdvancedSettings&);
         void from_json(const nlohmann::json&, ExportSettings&);
         void from_json(const nlohmann::json&, FileBrowserSettings&);
-        void from_json(const nlohmann::json&, ImageSequenceSettings&);
+        void from_json(const nlohmann::json&, ImageSeqSettings&);
         void from_json(const nlohmann::json&, MiscSettings&);
         void from_json(const nlohmann::json&, MouseActionBinding&);
         void from_json(const nlohmann::json&, MouseSettings&);

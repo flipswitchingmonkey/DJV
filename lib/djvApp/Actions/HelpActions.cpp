@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Actions/HelpActions.h>
 
 #include <djvApp/App.h>
 #include <djvApp/MainWindow.h>
 
-#include <feather-tk/core/OS.h>
+#include <ftk/Core/OS.h>
 
 namespace djv
 {
@@ -29,7 +28,7 @@ namespace djv
                 "Documentation",
                 []
                 {
-                    ftk::openURL("https://darbyjohnston.github.io/DJV/index.html");
+                    ftk::openURL("https://grizzlypeak3d.github.io/DJV/index.html");
                 });
 
             std::weak_ptr<MainWindow> mainWindowWeak(mainWindow);

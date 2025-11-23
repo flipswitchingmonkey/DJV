@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Models/ToolsModel.h>
 
-#include <feather-tk/ui/Settings.h>
-#include <feather-tk/core/Error.h>
-#include <feather-tk/core/String.h>
+#include <ftk/UI/Settings.h>
+#include <ftk/Core/Error.h>
+#include <ftk/Core/String.h>
 
 #include <array>
 #include <iostream>
@@ -23,33 +22,13 @@ namespace djv
             "Export",
             "View",
             "Color",
-            "ColorPicker",
-            "Info",
+            "Color Picker",
+            "Information",
             "Audio",
             "Devices",
             "Settings",
             "Messages",
-            "SystemLog");
-
-        std::string getText(Tool value)
-        {
-            const std::array<std::string, static_cast<size_t>(Tool::Count)> data =
-            {
-                "",
-                "Files",
-                "Export",
-                "View",
-                "Color",
-                "Color Picker",
-                "Information",
-                "Audio",
-                "Devices",
-                "Settings",
-                "Messages",
-                "System Log"
-            };
-            return data[static_cast<size_t>(value)];
-        }
+            "System Log");
 
         std::string getIcon(Tool value)
         {

@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp//Widgets/Viewport.h>
 
@@ -13,12 +12,12 @@
 
 #include <tlTimeline/Util.h>
 
-#include <feather-tk/ui/ColorSwatch.h>
-#include <feather-tk/ui/GridLayout.h>
-#include <feather-tk/ui/Label.h>
-#include <feather-tk/ui/RowLayout.h>
-#include <feather-tk/ui/Spacer.h>
-#include <feather-tk/core/Format.h>
+#include <ftk/UI/ColorSwatch.h>
+#include <ftk/UI/GridLayout.h>
+#include <ftk/UI/Label.h>
+#include <ftk/UI/RowLayout.h>
+#include <ftk/UI/Spacer.h>
+#include <ftk/Core/Format.h>
 
 #include <regex>
 
@@ -30,7 +29,7 @@ namespace djv
         {
             std::weak_ptr<App> app;
             bool hud = false;
-            tl::file::Path path;
+            ftk::Path path;
             OTIO_NS::RationalTime currentTime = tl::time::invalidTime;
             double fps = 0.0;
             size_t droppedFrames = 0;
@@ -88,9 +87,6 @@ namespace djv
         {
             tl::timelineui::Viewport::_init(context, parent);
             FTK_P();
-
-            _setMouseHoverEnabled(true);
-            _setMousePressEnabled(true);
 
             p.app = app;
 
@@ -306,7 +302,7 @@ namespace djv
             }
             else
             {
-                p.path = tl::file::Path();
+                p.path = ftk::Path();
                 p.currentTime = tl::time::invalidTime;
                 p.currentTimeObserver.reset();
                 p.videoDataObserver.reset();
@@ -371,7 +367,6 @@ namespace djv
         {
             tl::timelineui::Viewport::mousePressEvent(event);
             FTK_P();
-            takeKeyFocus();
             if (p.colorPickerBinding.button == event.button &&
                 ftk::checkKeyModifier(p.colorPickerBinding.modifier, event.modifiers))
             {
@@ -419,7 +414,7 @@ namespace djv
         {
             FTK_P();
 
-            p.fileNameLabel->setText(ftk::elide(p.path.get(-1, tl::file::PathType::FileName)));
+            p.fileNameLabel->setText(ftk::elide(p.path.getFileName()));
 
             std::string s;
             if (auto app = p.app.lock())

@@ -1,22 +1,21 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Tools/AudioTool.h>
 
 #include <djvApp/Models/AudioModel.h>
 #include <djvApp/App.h>
 
-#include <feather-tk/ui/Bellows.h>
-#include <feather-tk/ui/ButtonGroup.h>
-#include <feather-tk/ui/CheckBox.h>
-#include <feather-tk/ui/ComboBox.h>
-#include <feather-tk/ui/DoubleEditSlider.h>
-#include <feather-tk/ui/FormLayout.h>
-#include <feather-tk/ui/IntEditSlider.h>
-#include <feather-tk/ui/RowLayout.h>
-#include <feather-tk/ui/ScrollWidget.h>
-#include <feather-tk/core/Format.h>
+#include <ftk/UI/Bellows.h>
+#include <ftk/UI/ButtonGroup.h>
+#include <ftk/UI/CheckBox.h>
+#include <ftk/UI/ComboBox.h>
+#include <ftk/UI/DoubleEditSlider.h>
+#include <ftk/UI/FormLayout.h>
+#include <ftk/UI/IntEditSlider.h>
+#include <ftk/UI/RowLayout.h>
+#include <ftk/UI/ScrollWidget.h>
+#include <ftk/Core/Format.h>
 
 namespace djv
 {
@@ -84,7 +83,7 @@ namespace djv
             p.channelMuteLayout = ftk::HorizontalLayout::create(context);
             p.channelMuteLayout->setSpacingRole(ftk::SizeRole::SpacingTool);
             formLayout->addRow("Channel mute:", p.channelMuteLayout);
-            formLayout->addRow("Sync offset:", p.syncOffsetSlider);
+            formLayout->addRow("Sync offset (seconds):", p.syncOffsetSlider);
 
             auto scrollWidget = ftk::ScrollWidget::create(context);
             scrollWidget->setBorder(false);

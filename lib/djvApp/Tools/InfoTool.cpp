@@ -1,19 +1,18 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Tools/InfoTool.h>
 
 #include <djvApp/App.h>
 
-#include <feather-tk/ui/Divider.h>
-#include <feather-tk/ui/GridLayout.h>
-#include <feather-tk/ui/Label.h>
-#include <feather-tk/ui/RowLayout.h>
-#include <feather-tk/ui/ScrollWidget.h>
-#include <feather-tk/ui/SearchBox.h>
+#include <ftk/UI/Divider.h>
+#include <ftk/UI/GridLayout.h>
+#include <ftk/UI/Label.h>
+#include <ftk/UI/RowLayout.h>
+#include <ftk/UI/ScrollWidget.h>
+#include <ftk/UI/SearchBox.h>
 
-#include <feather-tk/core/String.h>
+#include <ftk/Core/String.h>
 
 namespace djv
 {

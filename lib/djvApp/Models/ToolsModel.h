@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #pragma once
 
-#include <feather-tk/ui/Event.h>
-#include <feather-tk/core/ObservableValue.h>
+#include <ftk/UI/Event.h>
+#include <ftk/Core/ObservableValue.h>
 
 namespace ftk
 {
@@ -36,9 +35,6 @@ namespace djv
             First = None
         };
         FTK_ENUM(Tool);
-
-        //! Get the tool text.
-        std::string getText(Tool);
 
         //! Get the tool icon.
         std::string getIcon(Tool);

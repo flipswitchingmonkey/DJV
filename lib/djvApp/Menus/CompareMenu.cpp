@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Menus/CompareMenu.h>
 
@@ -106,7 +105,7 @@ namespace djv
                 for (size_t i = 0; i < value.size(); ++i)
                 {
                     auto action = ftk::Action::create(
-                        value[i]->path.get(-1, tl::file::PathType::FileName),
+                        value[i]->path.getFileName(),
                         [this, i]
                         {
                             close();

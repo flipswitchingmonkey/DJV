@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #include <djvApp/Menus/WindowMenu.h>
 
 #include <djvApp/Actions/WindowActions.h>
 #include <djvApp/MainWindow.h>
 
-#include <feather-tk/core/Format.h>
+#include <ftk/Core/Format.h>
 
 namespace djv
 {

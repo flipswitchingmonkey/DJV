@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: BSD-3-Clause
-// Copyright (c) 2021-2025 Darby Johnston
-// All rights reserved.
+// Copyright Contributors to the DJV project.
 
 #pragma once
 
 #include <tlTimeline/Player.h>
 
-#include <feather-tk/ui/App.h>
+#include <ftk/UI/App.h>
 
 #include <filesystem>
 
@@ -67,8 +66,8 @@ namespace djv
 
             //! Open a file.
             void open(
-                const tl::file::Path& path,
-                const tl::file::Path& audioPath = tl::file::Path());
+                const ftk::Path& path,
+                const ftk::Path& audioPath = ftk::Path());
 
             //! Open a file dialog.
             void openDialog();
