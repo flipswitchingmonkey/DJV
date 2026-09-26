@@ -1,6 +1,14 @@
 name: CI
 
-on: [push]
+on: workflow_dispatch
+
+env:
+  TLRENDER_AOM=ON
+  TLRENDER_SVTAV1=ON
+  TLRENDER_FFMPEG=ON
+  TLRENDER_FFMPEG_MINIMAL=OFF
+  TLRENDER_FFMPEG_PLUGIN=ON
+  TLRENDER_FFMPEG_CMD=OFF
 
 jobs:
   linux-build:
